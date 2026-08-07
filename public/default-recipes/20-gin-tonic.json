@@ -1,0 +1,16 @@
+{
+  "name": "Gin Tonic",
+  "description": "Klarer Highball-Klassiker mit Gin und Tonic Water.",
+  "preparation": "Gin auf Eis geben, mit Tonic Water auffüllen und vorsichtig umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Gin",
+      "ml": 50
+    },
+    {
+      "ingredient": "Tonic Water",
+      "ml": 120
+    }
+  ]
+}

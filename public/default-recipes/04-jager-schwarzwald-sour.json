@@ -1,0 +1,24 @@
+{
+  "name": "Jäger Schwarzwald Sour",
+  "description": "Kirschig, kräuterwürzig und ausgewogen.",
+  "preparation": "Gut vorkühlen oder kurz mit Eis shaken und über frisches Eis geben.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Jägermeister",
+      "ml": 60
+    },
+    {
+      "ingredient": "Kirschsaft",
+      "ml": 65
+    },
+    {
+      "ingredient": "Zitronensaft",
+      "ml": 30
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 15
+    }
+  ]
+}

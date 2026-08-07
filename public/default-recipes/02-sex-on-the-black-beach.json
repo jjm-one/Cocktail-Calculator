@@ -1,0 +1,24 @@
+{
+  "name": "Sex on the Black Beach",
+  "description": "Dunkler, beeriger und etwas kräftiger.",
+  "preparation": "Alle Zutaten in den mit Eis gefüllten Becher geben und gründlich umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 35
+    },
+    {
+      "ingredient": "Pfirsichlikör",
+      "ml": 25
+    },
+    {
+      "ingredient": "Johannisbeersaft",
+      "ml": 55
+    },
+    {
+      "ingredient": "Ananassaft",
+      "ml": 55
+    }
+  ]
+}

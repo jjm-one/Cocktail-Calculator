@@ -1,0 +1,32 @@
+{
+  "name": "Mai Tai",
+  "description": "Rumstarker Tiki-Klassiker mit Limette, Orange und Mandel.",
+  "preparation": "Alle Zutaten mit Eis kräftig shaken und über frisches Eis geben.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Weißer Rum",
+      "ml": 40
+    },
+    {
+      "ingredient": "Dunkler Rum",
+      "ml": 20
+    },
+    {
+      "ingredient": "Triple Sec",
+      "ml": 15
+    },
+    {
+      "ingredient": "Mandelsirup",
+      "ml": 15
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 30
+    },
+    {
+      "ingredient": "Ananassaft",
+      "ml": 50
+    }
+  ]
+}

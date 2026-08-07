@@ -1,0 +1,28 @@
+{
+  "name": "Tropical Mojito – alkoholfrei",
+  "description": "Frisch, tropisch und näher an einem echten Mojito.",
+  "preparation": "Minze leicht anschlagen, mit den übrigen Zutaten auf Eis geben und vorsichtig umrühren. Minze wird nicht kalkuliert.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Gin alkoholfrei",
+      "ml": 40
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 25
+    },
+    {
+      "ingredient": "Maracujasirup",
+      "ml": 15
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 10
+    },
+    {
+      "ingredient": "Mineralwasser",
+      "ml": 80
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Aperol Spritz",
+  "description": "Bittersüßer italienischer Aperitif mit Prosecco und Soda.",
+  "preparation": "Aperol und Prosecco auf Eis geben, mit Mineralwasser ergänzen und vorsichtig umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Aperol",
+      "ml": 60
+    },
+    {
+      "ingredient": "Prosecco",
+      "ml": 90
+    },
+    {
+      "ingredient": "Mineralwasser",
+      "ml": 20
+    }
+  ]
+}

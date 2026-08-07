@@ -1,0 +1,20 @@
+{
+  "name": "Margarita",
+  "description": "Klassischer, trockener Tequila-Sour mit Orange und Limette.",
+  "preparation": "Alle Zutaten mit Eis kräftig shaken und in einen gekühlten Becher oder ein Glas abseihen.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Tequila",
+      "ml": 50
+    },
+    {
+      "ingredient": "Triple Sec",
+      "ml": 25
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 25
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Purple Rain",
+  "description": "Fruchtig, farbintensiv und weniger sirupartig.",
+  "preparation": "Vodka, Sirup und Limettensaft auf Eis geben, mit Limonade auffüllen. Grenadine zuletzt langsam eingießen.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 45
+    },
+    {
+      "ingredient": "Blue-Curaçao-Sirup alkoholfrei",
+      "ml": 15
+    },
+    {
+      "ingredient": "Grenadine alkoholfrei",
+      "ml": 7.5
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 15
+    },
+    {
+      "ingredient": "Zitronenlimonade",
+      "ml": 87.5
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Long Island Iced Tea",
+  "description": "Kräftig, aber geschmacklich ausgewogen.",
+  "preparation": "Spirituosen, Zitronensaft und Zuckersirup auf Eis geben, umrühren und mit Cola auffüllen.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 15
+    },
+    {
+      "ingredient": "Weißer Rum",
+      "ml": 15
+    },
+    {
+      "ingredient": "Gin",
+      "ml": 15
+    },
+    {
+      "ingredient": "Tequila",
+      "ml": 15
+    },
+    {
+      "ingredient": "Triple Sec",
+      "ml": 15
+    },
+    {
+      "ingredient": "Zitronensaft",
+      "ml": 25
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 20
+    },
+    {
+      "ingredient": "Cola",
+      "ml": 50
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Caipirinha",
+  "description": "Brasilianischer Klassiker mit Cachaça, Limette und Rohrzucker.",
+  "preparation": "Limette und Zuckersirup in den Becher geben, mit Eis füllen, Cachaça ergänzen und mit Mineralwasser auffüllen. Kurz umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Cachaça",
+      "ml": 60
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 30
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 20
+    },
+    {
+      "ingredient": "Mineralwasser",
+      "ml": 60
+    }
+  ]
+}

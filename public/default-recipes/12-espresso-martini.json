@@ -1,0 +1,24 @@
+{
+  "name": "Espresso Martini",
+  "description": "Kräftig, kaffebetont und ausgewogen.",
+  "preparation": "Alle Zutaten mit viel Eis kräftig shaken und fein abseihen. Für größere Mengen Espresso und übrige Zutaten gut vorkühlen.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 50
+    },
+    {
+      "ingredient": "Kaffeelikör",
+      "ml": 25
+    },
+    {
+      "ingredient": "Espresso",
+      "ml": 35
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 10
+    }
+  ]
+}

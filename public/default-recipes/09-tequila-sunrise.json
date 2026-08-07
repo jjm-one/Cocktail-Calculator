@@ -1,0 +1,20 @@
+{
+  "name": "Tequila Sunrise",
+  "description": "Klassisch, fruchtig und mit sichtbarem Farbverlauf.",
+  "preparation": "Tequila und Orangensaft auf Eis geben. Grenadine langsam am Innenrand eingießen und nicht mehr umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Tequila",
+      "ml": 50
+    },
+    {
+      "ingredient": "Orangensaft",
+      "ml": 100
+    },
+    {
+      "ingredient": "Grenadine alkoholfrei",
+      "ml": 20
+    }
+  ]
+}

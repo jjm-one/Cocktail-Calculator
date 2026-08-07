@@ -1,0 +1,63 @@
+﻿ingredient;product;package_ml;price;tax_rate;price_basis;commission;units_per_case;active;source
+Vodka;Wodka 1,0 l;1000;10,08;19;net;false;1;true;Festpreisliste Januar 2026
+Weißer Rum;Bacardi 1,0 l;1000;16,39;19;net;false;1;true;Festpreisliste Januar 2026
+Weißer Rum;Havana 1,0 l;1000;17,65;19;net;false;1;false;Festpreisliste Januar 2026
+Rum;Captain Morgan 1,0 l;1000;14,29;19;net;false;1;true;Festpreisliste Januar 2026
+Weinbrand;Asbach 1,0 l;1000;16,39;19;net;false;1;true;Festpreisliste Januar 2026
+Whiskey;Jack Daniels 1,0 l;1000;23,53;19;net;false;1;true;Festpreisliste Januar 2026
+Lillet;Lillet 0,75 l;750;13,45;19;net;false;1;true;Festpreisliste Januar 2026
+Aperol;Aperol 1,0 l;1000;15,97;19;net;false;1;true;Festpreisliste Januar 2026
+Jägermeister;Jägermeister 1,0 l;1000;18,07;19;net;false;1;true;Festpreisliste Januar 2026
+Gin;Earl Brown Gin 1,0 l;1000;10,5;19;net;false;1;true;Festpreisliste Januar 2026
+Saurer Likör;Saurer Joster 0,7 l;700;6,72;19;net;false;1;true;Festpreisliste Januar 2026
+Pfefferminzlikör;Pfeffi 1,0 l;1000;7,98;19;net;false;1;true;Festpreisliste Januar 2026
+Likör;Ficken 0,7 l;700;10,51;19;net;false;1;true;Festpreisliste Januar 2026
+Bitter Lemon;Schweppes Bitter Lemon 6×1,0 l;1000;1,821667;19;net;false;6;true;Festpreisliste Januar 2026
+Tonic Water;Schweppes Tonic Water 6×1,0 l;1000;1,821667;19;net;false;6;true;Festpreisliste Januar 2026
+Wild Berry;Schweppes Wild Berry 6×1,0 l;1000;1,821667;19;net;false;6;true;Festpreisliste Januar 2026
+Energy Drink;Jokes Energy 9×1,0 l PET;1000;1,774444;19;net;false;9;true;Festpreisliste Januar 2026
+Energy Drink;Red Bull 24×0,25 l Dose;250;1,172917;19;net;false;24;false;Festpreisliste Januar 2026
+Zitronenlimonade;Eisvogel Zitrone 12×0,7 l;700;0,665;19;net;false;12;false;Festpreisliste Januar 2026
+Zitronenlimonade;Eisvogel Zitrone 9×1,0 l PET;1000;0,886667;19;net;false;9;false;Festpreisliste Januar 2026
+Zitronenlimonade;Zwiefalter Edelperle 20×0,5 l;500;0,504;19;net;false;20;true;Festpreisliste Januar 2026
+Zitronenlimonade;Bluna Zitrone 24×0,33 l;330;0,595417;19;net;false;24;false;Festpreisliste Januar 2026
+Zitronenlimonade;Wita Zitrone 20×0,5 l;500;0,42;19;net;false;20;false;Festpreisliste Januar 2026
+Orangenlimonade;Eisvogel Orange 12×0,7 l;700;0,665;19;net;false;12;false;Festpreisliste Januar 2026
+Orangenlimonade;Zwiefalter Sorentina 20×0,5 l;500;0,504;19;net;false;20;true;Festpreisliste Januar 2026
+Orangenlimonade;Bluna Orange 24×0,33 l;330;0,595417;19;net;false;24;false;Festpreisliste Januar 2026
+Orangenlimonade;Wita Orange 20×0,5 l;500;0,42;19;net;false;20;false;Festpreisliste Januar 2026
+Cola;Afri Cola 24×0,33 l;330;0,595417;19;net;false;24;false;Festpreisliste Januar 2026
+Cola;Afri Cola 20×0,5 l;500;0,7565;19;net;false;20;false;Festpreisliste Januar 2026
+Cola;Coca-Cola 24×0,33 l;330;0,805417;19;net;false;24;true;Festpreisliste Januar 2026
+Cola;Coca-Cola 12×1,0 l;1000;1,330833;19;net;false;12;false;Festpreisliste Januar 2026
+Cola light;Coca-Cola light 24×0,33 l;330;0,805417;19;net;false;24;true;Festpreisliste Januar 2026
+Cola Zero;Coca-Cola Zero 24×0,33 l;330;0,805417;19;net;false;24;true;Festpreisliste Januar 2026
+Cola-Mix;Eisvogel Cola-Mix 12×0,7 l;700;0,7;19;net;false;12;false;Festpreisliste Januar 2026
+Cola-Mix;Zwiefalter Cola-Mix 20×0,5 l;500;0,5675;19;net;false;20;false;Festpreisliste Januar 2026
+Cola-Mix;Afri Cola-Mix 24×0,33 l;330;0,595417;19;net;false;24;false;Festpreisliste Januar 2026
+Cola-Mix;Mezzo Mix 24×0,33 l;330;0,805417;19;net;false;24;true;Festpreisliste Januar 2026
+Cola-Mix;Wita Cola-Mix 20×0,5 l;500;0,441;19;net;false;20;false;Festpreisliste Januar 2026
+Apfelsaft;Burkhardt Apfelsaft klar 6×1,0 l;1000;1,82;19;net;false;6;true;Festpreisliste Januar 2026
+Apfelsaft;Burkhardt Apfeldirektsaft klar/trüb 6×1,0 l;1000;1,891667;19;net;false;6;false;Festpreisliste Januar 2026
+Orangensaft;Burkhardt Orangensaft 6×1,0 l;1000;2,52;19;net;false;6;true;Festpreisliste Januar 2026
+Orangensaft;Burkhardt Orangendirektsaft 6×1,0 l;1000;2,871667;19;net;false;6;false;Festpreisliste Januar 2026
+Ananassaft;Burkhardt Ananassaft 6×1,0 l;1000;2,521667;19;net;false;6;true;Festpreisliste Januar 2026
+Johannisbeersaft;Burkhardt Johannisbeernektar schwarz 6×1,0 l;1000;2,381667;19;net;false;6;true;Festpreisliste Januar 2026
+Maracujasaft;Burkhardt Maracujanektar 6×1,0 l;1000;2,101667;19;net;false;6;true;Festpreisliste Januar 2026
+Kirschsaft;Burkhardt Sauerkirschnektar 6×1,0 l;1000;3,081667;19;net;false;6;true;Festpreisliste Januar 2026
+Multivitaminsaft;Burkhardt Multivitaminsaft 6×1,0 l;1000;2,381667;19;net;false;6;true;Festpreisliste Januar 2026
+Multivitaminsaft;Burkhardt Multivitamindirektsaft 6×1,0 l;1000;2,591667;19;net;false;6;false;Festpreisliste Januar 2026
+Apfelschorle;Burkhardt Apfelschorle 20×0,5 l;500;0,7985;19;net;false;20;true;Festpreisliste Januar 2026
+Apfelschorle;Zwiefalter Apfelschorle 20×0,5 l;500;0,7145;19;net;false;20;false;Festpreisliste Januar 2026
+Johannisbeerschorle;Burkhardt Johannisbeer Spritzer 24×0,33 l;330;0,787917;19;net;false;24;true;Festpreisliste Januar 2026
+Rhabarberschorle;Burkhardt Rhabarber Spritzer 24×0,33 l;330;0,787917;19;net;false;24;true;Festpreisliste Januar 2026
+Zitrone-Limette-Schorle;Burkhardt Zitrone-Limette Spritzer 24×0,33 l;330;0,787917;19;net;false;24;true;Festpreisliste Januar 2026
+Pfirsich-Eistee;Burkhardt Pfirsich Eistee 24×0,33 l;330;0,787917;19;net;false;24;true;Festpreisliste Januar 2026
+Mineralwasser;Eisvogel Spritzig 9×1,0 l PET;1000;0,7;19;net;false;9;true;Festpreisliste Januar 2026
+Mineralwasser;Eisvogel Medium 9×1,0 l PET;1000;0,7;19;net;false;9;false;Festpreisliste Januar 2026
+Mineralwasser still;Eisvogel Naturelle 9×1,0 l PET;1000;0,7;19;net;false;9;true;Festpreisliste Januar 2026
+Sekt;Fürstengold trocken/halbtrocken 0,75 l;750;4,37;19;net;false;1;true;Festpreisliste Januar 2026
+Sekt alkoholfrei;Fürstengold alkoholfrei 0,75 l;750;4,37;19;net;false;1;true;Festpreisliste Januar 2026
+Prosecco;Boccaccio Prosecco 0,75 l;750;3,95;19;net;false;1;true;Festpreisliste Januar 2026
+Roséwein;The Bottle Lemberger Rosé trocken 0,75 l;750;5,95;19;net;false;1;true;Festpreisliste Januar 2026
+Weißwein;The Bottle Riesling trocken 0,75 l;750;5,95;19;net;false;1;true;Festpreisliste Januar 2026

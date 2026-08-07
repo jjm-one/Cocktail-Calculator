@@ -1,0 +1,24 @@
+{
+  "name": "Cosmopolitan",
+  "description": "Trocken-fruchtiger Vodka-Cocktail mit Cranberry und Limette.",
+  "preparation": "Alle Zutaten mit Eis kräftig shaken und fein abseihen.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 40
+    },
+    {
+      "ingredient": "Triple Sec",
+      "ml": 20
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 20
+    },
+    {
+      "ingredient": "Cranberrysaft",
+      "ml": 30
+    }
+  ]
+}

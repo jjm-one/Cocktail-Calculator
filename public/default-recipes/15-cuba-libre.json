@@ -1,0 +1,20 @@
+{
+  "name": "Cuba Libre",
+  "description": "Rum, Cola und Limette in klassischer Longdrink-Balance.",
+  "preparation": "Rum und Limettensaft auf Eis geben, mit Cola auffüllen und kurz umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Weißer Rum",
+      "ml": 50
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 15
+    },
+    {
+      "ingredient": "Cola",
+      "ml": 105
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Jäger Mule",
+  "description": "Würzig, frisch und nicht zu süß.",
+  "preparation": "Jägermeister und Limettensaft auf Eis geben, mit Ginger Beer auffüllen und vorsichtig umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Jägermeister",
+      "ml": 50
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 15
+    },
+    {
+      "ingredient": "Ginger Beer",
+      "ml": 105
+    }
+  ]
+}

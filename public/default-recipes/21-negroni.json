@@ -1,0 +1,20 @@
+{
+  "name": "Negroni",
+  "description": "Herb, aromatisch und zu gleichen Teilen aufgebaut.",
+  "preparation": "Alle Zutaten auf Eis kalt rühren und über frisches Eis geben.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Gin",
+      "ml": 30
+    },
+    {
+      "ingredient": "Campari",
+      "ml": 30
+    },
+    {
+      "ingredient": "Roter Wermut",
+      "ml": 30
+    }
+  ]
+}

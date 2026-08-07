@@ -1,0 +1,20 @@
+{
+  "name": "Piña Colada",
+  "description": "Cremig, tropisch und klassisch mit Rum, Kokos und Ananas.",
+  "preparation": "Alle Zutaten mit Eis kräftig shaken oder blenden und in den mit Eis gefüllten Becher geben.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Weißer Rum",
+      "ml": 50
+    },
+    {
+      "ingredient": "Kokossirup",
+      "ml": 30
+    },
+    {
+      "ingredient": "Ananassaft",
+      "ml": 90
+    }
+  ]
+}

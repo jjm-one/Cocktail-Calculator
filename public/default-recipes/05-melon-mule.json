@@ -1,0 +1,24 @@
+{
+  "name": "Melon Mule",
+  "description": "Fruchtig, frisch und mit klarem Melonenaroma.",
+  "preparation": "Gin, Melonenlikör und Limettensaft auf Eis geben, mit Ginger Beer auffüllen und vorsichtig umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Gin",
+      "ml": 40
+    },
+    {
+      "ingredient": "Melonenlikör",
+      "ml": 20
+    },
+    {
+      "ingredient": "Limettensaft",
+      "ml": 20
+    },
+    {
+      "ingredient": "Ginger Beer",
+      "ml": 90
+    }
+  ]
+}

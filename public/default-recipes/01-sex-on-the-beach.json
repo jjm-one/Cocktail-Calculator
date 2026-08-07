@@ -1,0 +1,24 @@
+{
+  "name": "Sex on the Beach",
+  "description": "Fruchtig, ausgewogen und nach klassischem Barstandard.",
+  "preparation": "Becher vollständig mit Eis füllen. Alle Zutaten hineingeben und kurz umrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 50
+    },
+    {
+      "ingredient": "Pfirsichlikör",
+      "ml": 25
+    },
+    {
+      "ingredient": "Orangensaft",
+      "ml": 47.5
+    },
+    {
+      "ingredient": "Cranberrysaft",
+      "ml": 47.5
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Whiskey Sour",
+  "description": "Ausgewogener Sour mit Whiskey, Zitrone und Zucker.",
+  "preparation": "Alle Zutaten mit Eis kräftig shaken und über frisches Eis geben.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Whiskey",
+      "ml": 60
+    },
+    {
+      "ingredient": "Zitronensaft",
+      "ml": 30
+    },
+    {
+      "ingredient": "Zuckersirup",
+      "ml": 20
+    }
+  ]
+}

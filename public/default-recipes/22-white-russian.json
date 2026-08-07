@@ -1,0 +1,20 @@
+{
+  "name": "White Russian",
+  "description": "Cremiger Klassiker mit Vodka, Kaffee und Sahne.",
+  "preparation": "Vodka und Kaffeelikör auf Eis geben. Sahne langsam ergänzen und nach Wunsch leicht verrühren.",
+  "salePrice": 8.5,
+  "ingredients": [
+    {
+      "ingredient": "Vodka",
+      "ml": 50
+    },
+    {
+      "ingredient": "Kaffeelikör",
+      "ml": 25
+    },
+    {
+      "ingredient": "Sahne",
+      "ml": 45
+    }
+  ]
+}
