@@ -24,7 +24,7 @@ Live: [https://jjm-one.github.io/Cocktail-Calculator/](https://jjm-one.github.io
 - [React Router](https://reactrouter.com/) für das sprachpräfigierte URL-Routing
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) (Workbox) für Service Worker, Manifest und Offline-Precaching
 - [jsPDF](https://github.com/parallax/jsPDF) + [jspdf-autotable](https://github.com/simonbengtsson/jsPDF-AutoTable) für PDF-Exporte, [SheetJS/xlsx](https://sheetjs.com/) für Excel-Exporte
-- [Vitest](https://vitest.dev/) für Unit-Tests
+- [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/react) für Unit- und Komponententests
 
 ## Entwicklung
 
@@ -52,7 +52,13 @@ Im Entwicklungsmodus läuft die App unter der Root-URL (`http://localhost:5173/d
 
 ## Tests
 
-Die Kernlogik (`src/lib/`) ist mit [Vitest](https://vitest.dev/) unit-getestet: Preis-/Einheitenumrechnung, die vollständige Bestell- und Kalkulationsberechnung (`compute()`, inklusive Lagerbestand-Verrechnung, fehlender EK-Posten und Break-even), CSV-Parsing sowie die Validierung von Import-Dateien (Komplettsicherung und Rezepte-JSON, inklusive Erkennung fehlerhafter oder veralteter Dateien). Testdateien liegen als `*.test.ts` neben dem jeweils getesteten Modul.
+Getestet wird mit [Vitest](https://vitest.dev/) und [React Testing Library](https://testing-library.com/react), sowohl reine Logik als auch React-Komponenten:
+
+- **`src/lib/*.test.ts`** – Kernlogik ohne DOM: Preis-/Einheitenumrechnung, die vollständige Bestell- und Kalkulationsberechnung (`compute()`, inklusive Lagerbestand-Verrechnung, Kommission, Rundung auf Flaschen/Kartons, fehlender EK-Posten und Break-even), CSV-Parsing, Formatierung sowie die Validierung von Import-Dateien (Komplettsicherung und Rezepte-JSON, inklusive Erkennung fehlerhafter oder veralteter Dateien).
+- **`src/state/AppStateContext.test.tsx`** – der zentrale App-State über `renderHook`: EK-Posten-Exklusivität, CSV-Import, Rezept-CRUD inklusive Plan-Aufräumung, Werkseinstellungen, Backup-/Rezepte-Import und Autosave nach LocalStorage.
+- **`src/components/*.test.tsx`** – einzelne UI-Komponenten mit React Testing Library: Drag-and-drop-Dateiupload, Sprach-Umschaltung im Routing, Navigationsstatus, Toast-Verhalten (inkl. Fake-Timer) und das Warnbanner für fehlende EK-Zuordnungen.
+
+Testdateien liegen jeweils als `*.test.ts(x)` neben dem getesteten Modul. Komponententests laufen in einer jsdom-Umgebung (`vitest.config.ts`); reine Logik-Tests benötigen kein DOM.
 
 ```bash
 npm test
