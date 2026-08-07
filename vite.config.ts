@@ -7,8 +7,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 const pkg = JSON.parse(readFileSync(resolve(import.meta.dirname, 'package.json'), 'utf-8')) as { version: string };
 
 // GitHub Pages has no server-side rewrites. Serving a copy of index.html as
-// 404.html lets deep links like /Cocktail-Calculator/de/recipes load the
-// SPA shell, which then resolves the route client-side via React Router.
+// 404.html lets deep links like /de/recipes load the SPA shell, which then
+// resolves the route client-side via React Router.
 function spaFallback(): Plugin {
   return {
     name: 'spa-404-fallback',
@@ -20,7 +20,7 @@ function spaFallback(): Plugin {
   };
 }
 
-export default defineConfig(({ command, isPreview }) => ({
+export default defineConfig({
   // Vite 8's new default oxc transform has a tsconfig "references" resolution
   // bug that only surfaces on a clean install (it walks up to the solution-
   // style root tsconfig.json and fails to load a referenced project). Fall
@@ -59,9 +59,8 @@ export default defineConfig(({ command, isPreview }) => ({
     }),
     spaFallback(),
   ],
-  // Only the production build (and `vite preview`, which serves that same
-  // build) needs the GitHub Pages project-page subpath
-  // (github.io/Cocktail-Calculator/) so absolute asset URLs resolve there.
-  // Plain `vite dev` serves from root for clean /de/... URLs.
-  base: command === 'build' || isPreview ? '/Cocktail-Calculator/' : '/',
-}));
+  // The site is served from the custom domain root (cocktail-calculator.jjm.one,
+  // see CNAME) rather than the GitHub Pages project-page subpath, so absolute
+  // asset URLs must resolve at "/" for both dev and production builds.
+  base: '/',
+});
