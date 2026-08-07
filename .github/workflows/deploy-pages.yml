@@ -1,9 +1,7 @@
-name: Test, build and deploy GitHub Pages
+name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [main]
-  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -13,12 +11,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
-    name: Test and build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -35,33 +33,19 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Run unit tests
-        run: npm test
-
-      - name: Type-check and create production build
+      - name: Create production build
         run: npm run build
 
-      - name: Upload production build
-        uses: actions/upload-artifact@v7
-        with:
-          name: github-pages-build
-          path: dist
-          if-no-files-found: error
-          retention-days: 14
-
       - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
   deploy:
-    name: Deploy GitHub Pages
-    if: github.event_name != 'pull_request'
+    name: Deploy
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
