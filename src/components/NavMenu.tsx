@@ -15,7 +15,6 @@ export function NavMenu({ onNavigate }: NavMenuProps) {
     { to: `/${lang}/recipes`, label: t.nav.recipes },
     { to: `/${lang}/planning`, label: t.nav.planning },
     { to: `/${lang}/calculation`, label: t.nav.calculation },
-    { to: `/${lang}/leftover`, label: t.nav.leftover },
     { to: `/${lang}/data`, label: t.nav.data },
     { to: `/${lang}/settings`, label: t.nav.settings },
     { to: `/${lang}/help`, label: t.nav.help },

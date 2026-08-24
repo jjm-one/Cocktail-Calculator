@@ -7,7 +7,7 @@ import { useSortFilter, type ColumnSpec } from '../hooks/useSortFilter';
 import { SortableTh } from '../components/SortableTh';
 import { FilterRow } from '../components/FilterRow';
 import { Tooltip } from '../components/Tooltip';
-import type { RecipeCalcOptions, RecipeCalcRow } from '../lib/types';
+import type { LeftoverRow, RecipeCalcOptions, RecipeCalcRow } from '../lib/types';
 
 const DEFAULT_CALC_OPTIONS: RecipeCalcOptions = {
   includeStock: false,
@@ -44,6 +44,7 @@ export default function CalculationPage() {
   const [calcOptions, setCalcOptions] = useState<RecipeCalcOptions>(DEFAULT_CALC_OPTIONS);
   const rows = useMemo(() => computeRecipeCalcRows(state, calcOptions), [state, calcOptions]);
   const toggle = (key: keyof RecipeCalcOptions) => setCalcOptions((prev) => ({ ...prev, [key]: !prev[key] }));
+  const [showLeftoverDetail, setShowLeftoverDetail] = useState(false);
 
   const columns: ColumnSpec<RecipeCalcRow>[] = useMemo(
     () => [
@@ -82,6 +83,28 @@ export default function CalculationPage() {
     [lang, currency],
   );
   const { rows: visibleRows, sort, toggleSort, filters, setFilter } = useSortFilter(rows, columns);
+
+  const leftoverColumns: ColumnSpec<LeftoverRow>[] = useMemo(
+    () => [
+      { key: 'ingredient', sortValue: (r) => r.ingredient, filterValue: (r) => r.ingredient },
+      { key: 'product', sortValue: (r) => r.purchase.product, filterValue: (r) => r.purchase.product },
+      {
+        key: 'commission',
+        sortValue: (r) => (r.purchase.commission ? 1 : 0),
+        filterValue: (r) => (r.purchase.commission ? t.purchases.yes : t.purchases.no),
+      },
+      { key: 'leftoverMl', sortValue: (r) => r.leftoverMl, filterValue: (r) => num(r.leftoverMl / 1000, lang, 2) },
+      { key: 'leftoverValue', sortValue: (r) => r.leftoverValue, filterValue: (r) => money(r.leftoverValue, lang, currency) },
+    ],
+    [lang, currency, t],
+  );
+  const {
+    rows: visibleLeftoverRows,
+    sort: leftoverSort,
+    toggleSort: toggleLeftoverSort,
+    filters: leftoverFilters,
+    setFilter: setLeftoverFilter,
+  } = useSortFilter(computed.leftoverRows, leftoverColumns);
 
   const comparisonRows: [string, string, string, string][] = [
     [
@@ -151,9 +174,29 @@ export default function CalculationPage() {
         <table>
           <thead>
             <tr>
-              <SortableTh label={t.calculation.thCocktail} sortKey="cocktail" sort={sort} onSort={toggleSort} />
-              <SortableTh label={t.calculation.thServings} sortKey="servings" sort={sort} onSort={toggleSort} className="num" />
-              <SortableTh label={t.calculation.thEkNoLoss} sortKey="ek" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh
+                label={t.calculation.thCocktail}
+                tooltip={t.calculation.thCocktailTip}
+                sortKey="cocktail"
+                sort={sort}
+                onSort={toggleSort}
+              />
+              <SortableTh
+                label={t.calculation.thServings}
+                tooltip={t.calculation.thServingsTip}
+                sortKey="servings"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
+              <SortableTh
+                label={t.calculation.thEkNoLoss}
+                tooltip={t.calculation.thEkNoLossTip}
+                sortKey="ek"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
               <SortableTh
                 label={t.calculation.thEkAtSoldShare}
                 tooltip={t.calculation.thEkAtSoldShareTip}
@@ -162,8 +205,22 @@ export default function CalculationPage() {
                 onSort={toggleSort}
                 className="num"
               />
-              <SortableTh label={t.calculation.thSale} sortKey="sale" sort={sort} onSort={toggleSort} className="num" />
-              <SortableTh label={t.calculation.thMargin} sortKey="margin" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh
+                label={t.calculation.thSale}
+                tooltip={t.calculation.thSaleTip}
+                sortKey="sale"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
+              <SortableTh
+                label={t.calculation.thMargin}
+                tooltip={t.calculation.thMarginTip}
+                sortKey="margin"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
               <SortableTh
                 label={t.calculation.thMarginAtSoldShare}
                 tooltip={t.calculation.thMarginAtSoldShareTip}
@@ -172,10 +229,38 @@ export default function CalculationPage() {
                 onSort={toggleSort}
                 className="num"
               />
-              <SortableTh label={t.calculation.thFoodCost} sortKey="foodCost" sort={sort} onSort={toggleSort} className="num" />
-              <SortableTh label={t.calculation.thMarkup} sortKey="markup" sort={sort} onSort={toggleSort} className="num" />
-              <SortableTh label={t.calculation.thContribution} sortKey="contribution" sort={sort} onSort={toggleSort} className="num" />
-              <SortableTh label={t.calculation.thRevenue} sortKey="revenue" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh
+                label={t.calculation.thFoodCost}
+                tooltip={t.calculation.thFoodCostTip}
+                sortKey="foodCost"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
+              <SortableTh
+                label={t.calculation.thMarkup}
+                tooltip={t.calculation.thMarkupTip}
+                sortKey="markup"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
+              <SortableTh
+                label={t.calculation.thContribution}
+                tooltip={t.calculation.thContributionTip}
+                sortKey="contribution"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
+              <SortableTh
+                label={t.calculation.thRevenue}
+                tooltip={t.calculation.thRevenueTip}
+                sortKey="revenue"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
             </tr>
             <FilterRow
               filters={filters}
@@ -318,6 +403,66 @@ export default function CalculationPage() {
             </tbody>
           </table>
         </div>
+
+        <button type="button" className="ghost top-gap" onClick={() => setShowLeftoverDetail((v) => !v)}>
+          {showLeftoverDetail ? t.calculation.leftoverDetailHide : t.calculation.leftoverDetailShow}
+        </button>
+        {showLeftoverDetail && (
+          <div className="table-wrap is-wide top-gap">
+            <table>
+              <thead>
+                <tr>
+                  <SortableTh label={t.leftover.thIngredient} sortKey="ingredient" sort={leftoverSort} onSort={toggleLeftoverSort} />
+                  <SortableTh label={t.leftover.thProduct} sortKey="product" sort={leftoverSort} onSort={toggleLeftoverSort} />
+                  <SortableTh label={t.leftover.thCommission} sortKey="commission" sort={leftoverSort} onSort={toggleLeftoverSort} />
+                  <SortableTh
+                    label={t.leftover.thLeftoverMl}
+                    sortKey="leftoverMl"
+                    sort={leftoverSort}
+                    onSort={toggleLeftoverSort}
+                    className="num"
+                  />
+                  <SortableTh
+                    label={t.leftover.thLeftoverValue}
+                    sortKey="leftoverValue"
+                    sort={leftoverSort}
+                    onSort={toggleLeftoverSort}
+                    className="num"
+                  />
+                </tr>
+                <FilterRow
+                  filters={leftoverFilters}
+                  onChange={setLeftoverFilter}
+                  cells={[
+                    { key: 'ingredient', label: t.leftover.thIngredient },
+                    { key: 'product', label: t.leftover.thProduct },
+                    { key: 'commission', label: t.leftover.thCommission },
+                    { key: 'leftoverMl', label: t.leftover.thLeftoverMl, className: 'num' },
+                    { key: 'leftoverValue', label: t.leftover.thLeftoverValue, className: 'num' },
+                  ]}
+                />
+              </thead>
+              <tbody>
+                {visibleLeftoverRows.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="muted">
+                      {t.leftover.empty}
+                    </td>
+                  </tr>
+                )}
+                {visibleLeftoverRows.map((row) => (
+                  <tr key={row.ingredient}>
+                    <td>{row.ingredient}</td>
+                    <td>{row.purchase.product}</td>
+                    <td>{row.purchase.commission ? t.purchases.yes : t.purchases.no}</td>
+                    <td className="num">{num(row.leftoverMl / 1000, lang, 2)} l</td>
+                    <td className="num">{money(row.leftoverValue, lang, currency)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <h4>{t.calculation.sectionBreakEven}</h4>
         <div className="metric-grid">

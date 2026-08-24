@@ -10,7 +10,6 @@ import PurchasesPage from './pages/PurchasesPage';
 import RecipesPage from './pages/RecipesPage';
 import PlanningPage from './pages/PlanningPage';
 import CalculationPage from './pages/CalculationPage';
-import LeftoverPage from './pages/LeftoverPage';
 import DataPage from './pages/DataPage';
 import SettingsPage from './pages/SettingsPage';
 import HelpPage from './pages/HelpPage';
@@ -43,7 +42,6 @@ export default function App() {
               <Route path="recipes" element={<RecipesPage />} />
               <Route path="planning" element={<PlanningPage />} />
               <Route path="calculation" element={<CalculationPage />} />
-              <Route path="leftover" element={<LeftoverPage />} />
               <Route path="data" element={<DataPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="help" element={<HelpPage />} />

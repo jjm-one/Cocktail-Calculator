@@ -13,7 +13,6 @@ const de = {
     recipes: "Rezepte",
     planning: "Planung",
     calculation: "Kalkulation",
-    leftover: "Restbestand",
     data: "Daten",
     settings: "Einstellungen",
     help: "Hilfe",
@@ -148,20 +147,31 @@ const de = {
     optionCommission: "Kommissionsware",
     optionCommissionTip: "Kommissionsware wird mit dem Kommissions-Kostenmodell (angebrochene Flasche/Karton) statt mit reinem Stückpreis bewertet.",
     thCocktail: "Cocktail",
+    thCocktailTip: "Name des Cocktails laut Rezept; alkoholfreie Rezepte sind zusätzlich mit einem Badge gekennzeichnet.",
     thServings: "Getränke",
+    thServingsTip: "Anzahl geplanter Getränke aus der Bestellplanung.",
     thEkNoLoss: "EK/Getränk",
+    thEkNoLossTip:
+      "EK je Getränk unter Berücksichtigung der oben aktivierten Häkchen (Bestand/Verlust/Puffer/Kommissionsware). Ohne Haken der reine Einkaufspreis der Zutaten ohne Aufschläge.",
     thEkAtSoldShare: "EK bei Verkaufsquote",
     thEkAtSoldShareTip:
       "EK je Getränk, wenn nur der geplante Verkaufsanteil (siehe Einstellungen) tatsächlich benötigt wird. Bei Bestand/Kommissionsware kann dieser Preis wegen Gebinderundung höher als der reguläre EK ausfallen.",
     thSale: "VK",
+    thSaleTip: "Verkaufspreis laut Rezept.",
     thMargin: "Marge",
+    thMarginTip: "Verkaufspreis minus EK/Getränk, in Klammern als Prozentsatz vom Verkaufspreis.",
     thMarginAtSoldShare: "Marge bei Verkaufsquote",
     thMarginAtSoldShareTip:
       "Marge je Getränk auf Basis des EK bei Verkaufsquote statt des vollen Plan-EK. Beachte: anders als die Gesamtkalkulation unten unterstellt dieser Wert weiterhin, dass nur exakt der Bedarf der Verkaufsquote eingekauft wird – nicht, dass bereits für die volle Planmenge eingekauft wurde und der Rest ungenutzt bleibt.",
     thFoodCost: "Wareneinsatz",
+    thFoodCostTip: "EK/Getränk geteilt durch Verkaufspreis – Kostenanteil, den die Zutaten am Verkaufspreis ausmachen.",
     thMarkup: "Aufschlag",
+    thMarkupTip: "Verkaufspreis geteilt durch EK/Getränk – um welchen Faktor der Verkaufspreis über dem Wareneinsatz liegt.",
     thContribution: "Deckungsbeitrag gesamt",
+    thContributionTip:
+      "Marge je Getränk multipliziert mit der Anzahl geplanter Getränke und dem Ausbeutefaktor (siehe Einstellungen) – Beitrag dieses Cocktails zum Gesamtergebnis.",
     thRevenue: "Erlös",
+    thRevenueTip: "Verkaufspreis multipliziert mit der Anzahl geplanter Getränke und dem Ausbeutefaktor (siehe Einstellungen).",
     unreachable: "nicht erreichbar",
     sectionOrderCosts: "Bestellkosten",
     grossOrderCost: "Bestell-EK brutto",
@@ -207,6 +217,8 @@ const de = {
     leftoverColNoCommission: "ohne Kommission",
     leftoverColNoCommissionTip:
       "Kommissionsware wie normale, fest eingekaufte Ware behandelt – auch ihr ungenutzter Anteil bei Verkaufsquote zählt hier als gebundenes Kapital.",
+    leftoverDetailShow: "Aufschlüsselung je Zutat anzeigen",
+    leftoverDetailHide: "Aufschlüsselung je Zutat ausblenden",
     sectionBreakEven: "Break-even & Rendite",
     returnOnFoodCost: "Rendite auf Wareneinsatz",
     returnOnFoodCostTip: "Ergebnis bei 100 % Abverkauf geteilt durch den Bestell-EK brutto.",
@@ -352,7 +364,7 @@ const de = {
   help: {
     title: "Hilfe & Bedienungsanleitung",
     intro:
-      "Diese Seite erklärt den empfohlenen Ablauf, die wichtigsten Eingaben und die Berechnungslogik des Cocktail-Calculators.",
+      "Diese Seite erklärt den empfohlenen Ablauf, die wichtigsten Eingaben und die Berechnungslogik des Cocktail-Calculators. Alle Datentabellen lassen sich durch Klick auf eine Spaltenüberschrift sortieren und über die Filterzeile direkt darunter je Spalte durchsuchen; ein Fragezeichen-Symbol neben einem Spalten- oder Kennzahlennamen zeigt beim Überfahren eine Erklärung.",
     quickTitle: "Empfohlener Ablauf",
     quick1:
       "EK-Posten prüfen: Hinterlege Produkte, Gebindegrößen, Preise, Steuersätze und Kommissionsregeln. Pro Zutatenart wird das aktivierte Produkt verwendet.",
@@ -361,7 +373,7 @@ const de = {
     quick3:
       "Planung erstellen: Wähle ein Subset der Cocktails und plane je Sorte eine Stückzahl oder eine Flüssigkeitsmenge.",
     quick4:
-      "Kalkulation prüfen: Kontrolliere Bestellmengen, Wareneinsatz, Marge, Gebindeüberhang und Break-even.",
+      "Kalkulation prüfen: Kontrolliere Bestellmengen, Wareneinsatz, Marge, Gebindeüberhang und Break-even – inklusive Vergleich zwischen 100 % Abverkauf und der geplanten Verkaufsquote.",
     quick5:
       "Daten sichern: Lade die komplette Konfiguration herunter, um alle lokalen Eingaben auf ein anderes Gerät zu übertragen.",
     purchasesTitle: "EK-Posten",
@@ -369,13 +381,13 @@ const de = {
       "Gebindegrößen werden intern in Millilitern gespeichert. Fehlt die Angabe Flaschen je Karton, wird 1 angenommen. Der Preis kann netto oder brutto mit frei konfigurierbarem Steuersatz erfasst werden. Bei Kommissionsware bestimmt die globale Einstellung, ob angebrochene Flaschen oder Kartons berechnet werden.",
     recipesTitle: "Rezepte & Skalierung",
     recipesBody:
-      "Rezepte lassen sich bearbeiten, duplizieren, löschen und als JSON importieren oder exportieren. Der Rezept-Skalierer rechnet ein einzelnes Rezept auf eine Zielmenge in ml, cl oder l hoch und exportiert die Rezeptur separat als PDF oder CSV – ohne Planungs- oder Kalkulationsposition.",
+      "Rezepte lassen sich bearbeiten, duplizieren, löschen und als JSON importieren oder exportieren. Ein Rezept kann als alkoholfrei markiert werden; das wird in der Rezeptliste und in der Kalkulation als Badge angezeigt. Der Rezept-Skalierer rechnet ein einzelnes Rezept auf eine Zielmenge in ml, cl oder l hoch und exportiert die Rezeptur separat als PDF oder CSV – ohne Planungs- oder Kalkulationsposition.",
     planningTitle: "Planung & Verluste",
     planningBody:
       "Reserve/Puffer und Verbrauchsverlust erhöhen den Zutatenbedarf. Ausbeuteverlust reduziert die verkaufbare Getränkemenge. Beide Verlustmodelle können gleichzeitig verwendet werden. Eis, Garnituren und Dekorationen werden nicht berücksichtigt.",
     metricsTitle: "Wichtige Kennzahlen",
     metricsBody:
-      "Wareneinsatzquote zeigt den Kostenanteil am Verkaufspreis. Deckungsbeitrag ist Verkaufspreis minus variabler Wareneinsatz. Aufschlagsfaktor ist Verkaufspreis geteilt durch Wareneinsatz. Gebindeüberhang zeigt den durch volle Flaschen oder Kartons entstehenden Restbestand. Break-even zeigt, welcher Anteil der geplanten Menge mindestens verkauft werden muss.",
+      "Wareneinsatzquote zeigt den Kostenanteil am Verkaufspreis. Deckungsbeitrag ist Verkaufspreis minus variabler Wareneinsatz. Aufschlagsfaktor ist Verkaufspreis geteilt durch Wareneinsatz. Gebindeüberhang zeigt den durch volle Flaschen oder Kartons entstehenden Restbestand. Break-even zeigt, welcher Anteil der geplanten Menge mindestens verkauft werden muss. In der Einzelauflistung je Cocktail lässt sich per Häkchen wählen, ob Bestand, Verlust, Puffer und Kommissionsware in den EK einfließen; ohne Haken zeigt die Tabelle den reinen Wareneinkaufspreis. Die Gesamtkalkulation vergleicht durchgehend 100 % Abverkauf mit der geplanten Verkaufsquote (Erlös, Kosten, Ergebnis, Wareneinsatzquote, Bruttomarge) und bietet eine einblendbare, nach Zutat sortier- und filterbare Aufschlüsselung des voraussichtlichen Restbestands – jeweils mit und ohne Anwendung der Kommissionsware-Abrechnung.",
 
     tocTitle: "Auf dieser Seite",
 
@@ -464,7 +476,6 @@ const en: typeof de = {
     recipes: "Recipes",
     planning: "Planning",
     calculation: "Calculation",
-    leftover: "Leftover stock",
     data: "Data",
     settings: "Settings",
     help: "Help",
@@ -598,20 +609,31 @@ const en: typeof de = {
     optionCommission: "Commission goods",
     optionCommissionTip: "Commission goods are priced using the commission cost model (opened bottle/case) instead of a plain unit price.",
     thCocktail: "Cocktail",
+    thCocktailTip: "Cocktail name from the recipe; alcohol-free recipes carry an extra badge.",
     thServings: "Drinks",
+    thServingsTip: "Number of planned drinks from the order planning.",
     thEkNoLoss: "COGS/drink",
+    thEkNoLossTip:
+      "COGS per drink reflecting the checkboxes enabled above (stock/loss/buffer/commission goods). With none checked, this is the plain ingredient purchase price with no markups.",
     thEkAtSoldShare: "COGS at sell-through",
     thEkAtSoldShareTip:
       "COGS per drink if only the planned sell-through share (see settings) is actually needed. With stock/commission goods this can end up higher than the regular COGS because of package rounding.",
     thSale: "Sales price",
+    thSaleTip: "Sales price from the recipe.",
     thMargin: "Margin",
+    thMarginTip: "Sales price minus COGS/drink, shown in brackets as a percentage of the sales price.",
     thMarginAtSoldShare: "Margin at sell-through",
     thMarginAtSoldShareTip:
       "Margin per drink based on COGS at sell-through instead of the full-plan COGS. Note: unlike the overall calculation below, this value still assumes only the sell-through demand is bought — not that the full planned quantity was already purchased and the rest goes unused.",
     thFoodCost: "Food cost",
+    thFoodCostTip: "COGS/drink divided by sales price – the cost share ingredients make up of the sales price.",
     thMarkup: "Markup",
+    thMarkupTip: "Sales price divided by COGS/drink – the factor by which the sales price exceeds the cost of goods.",
     thContribution: "Total contribution",
+    thContributionTip:
+      "Margin per drink multiplied by the number of planned drinks and the yield factor (see settings) – this cocktail's contribution to the overall result.",
     thRevenue: "Revenue",
+    thRevenueTip: "Sales price multiplied by the number of planned drinks and the yield factor (see settings).",
     unreachable: "not achievable",
     sectionOrderCosts: "Purchase cost",
     grossOrderCost: "Gross purchase cost",
@@ -657,6 +679,8 @@ const en: typeof de = {
     leftoverColNoCommission: "without commission",
     leftoverColNoCommissionTip:
       "Commission goods treated like regular, outright-purchased stock — their unused share at the sold-through rate also counts as capital tied up here.",
+    leftoverDetailShow: "Show breakdown per ingredient",
+    leftoverDetailHide: "Hide breakdown per ingredient",
     sectionBreakEven: "Break-even & return",
     returnOnFoodCost: "Return on cost of goods",
     returnOnFoodCostTip: "Result at 100% sell-through divided by the gross purchase cost.",
@@ -801,7 +825,7 @@ const en: typeof de = {
   help: {
     title: "Help & user guide",
     intro:
-      "This page explains the recommended workflow, the most important inputs and the calculation logic of the Cocktail-Calculator.",
+      "This page explains the recommended workflow, the most important inputs and the calculation logic of the Cocktail-Calculator. Every data table can be sorted by clicking a column header and searched per column via the filter row right below it; a question-mark icon next to a column or metric name shows an explanation on hover.",
     quickTitle: "Recommended workflow",
     quick1:
       "Review purchase items: Enter products, package sizes, prices, tax rates and commission rules. The active product for each ingredient type is used.",
@@ -810,7 +834,7 @@ const en: typeof de = {
     quick3:
       "Create a plan: Select a subset of cocktails and plan each one by number of drinks or liquid volume.",
     quick4:
-      "Review the calculation: Check order quantities, food cost, margin, package surplus and break-even.",
+      "Review the calculation: Check order quantities, food cost, margin, package surplus and break-even – including the comparison between 100% sell-through and the planned sell-through share.",
     quick5:
       "Back up data: Download a full configuration file to transfer all local settings and inputs to another device.",
     purchasesTitle: "Purchase items",
@@ -818,13 +842,13 @@ const en: typeof de = {
       "Package sizes are stored internally in millilitres. If bottles per case is blank, 1 is assumed. Prices can be entered net or gross with a configurable tax rate. For commission goods, the global setting determines whether opened bottles or opened cases are charged.",
     recipesTitle: "Recipes & scaling",
     recipesBody:
-      "Recipes can be edited, duplicated, deleted, imported and exported as JSON. The recipe scaler scales one recipe to a target volume in ml, cl or l and exports it separately as PDF or CSV – without creating a planning or calculation item.",
+      "Recipes can be edited, duplicated, deleted, imported and exported as JSON. A recipe can be marked alcohol-free; this is shown as a badge in the recipe list and in the calculation. The recipe scaler scales one recipe to a target volume in ml, cl or l and exports it separately as PDF or CSV – without creating a planning or calculation item.",
     planningTitle: "Planning & losses",
     planningBody:
       "Reserve/buffer and consumption loss increase ingredient demand. Yield loss reduces the sellable drink quantity. Both loss models can be used together. Ice, garnishes and decorations are excluded.",
     metricsTitle: "Key metrics",
     metricsBody:
-      "Food cost ratio shows the cost share of the sales price. Contribution is sales price minus variable ingredient cost. Markup factor is sales price divided by ingredient cost. Package surplus shows remaining stock caused by full bottles or cases. Break-even shows the minimum share of the planned quantity that must be sold.",
+      "Food cost ratio shows the cost share of the sales price. Contribution is sales price minus variable ingredient cost. Markup factor is sales price divided by ingredient cost. Package surplus shows remaining stock caused by full bottles or cases. Break-even shows the minimum share of the planned quantity that must be sold. In the per-cocktail listing, checkboxes let you choose whether stock, loss, buffer and commission goods flow into the cost; with none checked, the table shows the plain ingredient purchase price. The overall calculation continuously compares 100% sell-through with the planned sell-through share (revenue, cost, result, food cost ratio, gross margin) and offers a collapsible, sortable and filterable breakdown of expected leftover stock per ingredient – both with and without applying the commission-goods billing rule.",
 
     tocTitle: "On this page",
 
