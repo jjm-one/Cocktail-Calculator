@@ -295,4 +295,32 @@ describe('computeRecipeCalcRows', () => {
     expect(row.markupFactor).toBe(0);
     expect(row.marginPct).toBe(0);
   });
+
+  it('matches ek for ekAtSoldShare when soldPct is 100%, regardless of toggles', () => {
+    const state = makeState({
+      settings: makeSettings({ soldPct: 100 }),
+      purchases: [makePurchase({ price: 10, packageMl: 1000, unitsPerCase: 6, commission: true, stockUnits: 1 })],
+    });
+    const row = computeRecipeCalcRows(state, { includeStock: true, includeLoss: true, includeBuffer: true, includeCommission: true })[0];
+    expect(row.ekAtSoldShare).toBeCloseTo(row.ek, 5);
+  });
+
+  it('raises the commission-goods price per drink when only a lower share is assumed sold', () => {
+    // A single recipe/drink needs 13 bottle-equivalents (13000ml) of a commission ingredient
+    // (case size 6, 10 €/bottle): 13 -> 18 charged bottles = 180 €, rate 180/13000.
+    // At a 50% sold share, only 6.5 bottle-equivalents are assumed needed: 7 -> 12 charged
+    // bottles = 120 €, rate 120/6500 - a worse (higher) rate because the fixed case-rounding
+    // overhead is spread over less assumed volume. Applied back to the full 13000ml drink,
+    // that higher rate produces a higher price (240 €) than the full-share price (180 €).
+    const state = makeState({
+      settings: makeSettings({ defaultServingMl: 13000, soldPct: 50, commissionMode: 'case' }),
+      purchases: [makePurchase({ price: 10, packageMl: 1000, unitsPerCase: 6, commission: true })],
+      recipes: [makeRecipe({ ingredients: [{ id: 'i1', ingredient: 'Vodka', ml: 13000 }] })],
+      plans: { r1: { mode: 'pieces', value: 1, unit: 'ml', selected: true } },
+    });
+    const row = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeCommission: true })[0];
+    expect(row.ek).toBeCloseTo(180, 5);
+    expect(row.ekAtSoldShare).toBeCloseTo(240, 5);
+    expect(row.ekAtSoldShare).toBeGreaterThan(row.ek);
+  });
 });

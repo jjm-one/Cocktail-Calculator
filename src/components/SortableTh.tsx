@@ -3,12 +3,14 @@ import type { SortState } from '../hooks/useSortFilter';
 
 export function SortableTh({
   label,
+  tooltip,
   sortKey,
   sort,
   onSort,
   className,
 }: {
   label: ReactNode;
+  tooltip?: string;
   sortKey: string;
   sort: SortState | null;
   onSort: (key: string) => void;
@@ -24,6 +26,11 @@ export function SortableTh({
           {dir === 'asc' ? '▲' : dir === 'desc' ? '▼' : '⇅'}
         </span>
       </button>
+      {tooltip && (
+        <span className="tooltip" data-tip={tooltip}>
+          ?
+        </span>
+      )}
     </th>
   );
 }

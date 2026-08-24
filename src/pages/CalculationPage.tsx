@@ -29,6 +29,11 @@ export default function CalculationPage() {
       { key: 'cocktail', sortValue: (r) => r.recipe.name, filterValue: (r) => r.recipe.name },
       { key: 'servings', sortValue: (r) => r.servings, filterValue: (r) => num(r.servings, lang, 2) },
       { key: 'ek', sortValue: (r) => r.ek, filterValue: (r) => money(r.ek, lang, currency) },
+      {
+        key: 'ekAtSoldShare',
+        sortValue: (r) => r.ekAtSoldShare,
+        filterValue: (r) => money(r.ekAtSoldShare, lang, currency),
+      },
       { key: 'sale', sortValue: (r) => r.sale, filterValue: (r) => money(r.sale, lang, currency) },
       {
         key: 'margin',
@@ -106,6 +111,14 @@ export default function CalculationPage() {
               <SortableTh label={t.calculation.thCocktail} sortKey="cocktail" sort={sort} onSort={toggleSort} />
               <SortableTh label={t.calculation.thServings} sortKey="servings" sort={sort} onSort={toggleSort} className="num" />
               <SortableTh label={t.calculation.thEkNoLoss} sortKey="ek" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh
+                label={t.calculation.thEkAtSoldShare}
+                tooltip={t.calculation.thEkAtSoldShareTip}
+                sortKey="ekAtSoldShare"
+                sort={sort}
+                onSort={toggleSort}
+                className="num"
+              />
               <SortableTh label={t.calculation.thSale} sortKey="sale" sort={sort} onSort={toggleSort} className="num" />
               <SortableTh label={t.calculation.thMargin} sortKey="margin" sort={sort} onSort={toggleSort} className="num" />
               <SortableTh label={t.calculation.thFoodCost} sortKey="foodCost" sort={sort} onSort={toggleSort} className="num" />
@@ -120,6 +133,7 @@ export default function CalculationPage() {
                 { key: 'cocktail', label: t.calculation.thCocktail },
                 { key: 'servings', label: t.calculation.thServings, className: 'num' },
                 { key: 'ek', label: t.calculation.thEkNoLoss, className: 'num' },
+                { key: 'ekAtSoldShare', label: t.calculation.thEkAtSoldShare, className: 'num' },
                 { key: 'sale', label: t.calculation.thSale, className: 'num' },
                 { key: 'margin', label: t.calculation.thMargin, className: 'num' },
                 { key: 'foodCost', label: t.calculation.thFoodCost, className: 'num' },
@@ -135,6 +149,7 @@ export default function CalculationPage() {
                 <td>{row.recipe.name}</td>
                 <td className="num">{num(row.servings, lang, 2)}</td>
                 <td className="num">{money(row.ek, lang, currency)}</td>
+                <td className="num">{money(row.ekAtSoldShare, lang, currency)}</td>
                 <td className="num">{money(row.sale, lang, currency)}</td>
                 <td className="num">
                   {money(row.margin, lang, currency)} ({num(row.marginPct, lang, 1)} %)

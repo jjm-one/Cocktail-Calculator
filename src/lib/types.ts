@@ -109,6 +109,8 @@ export interface RecipeCalcRow {
   recipe: Recipe;
   servings: number;
   ek: number;
+  /** Same EK, but stock-netting/commission-case-rounding assume only `settings.soldPct` of the planned demand is actually needed. */
+  ekAtSoldShare: number;
   sale: number;
   margin: number;
   marginPct: number;

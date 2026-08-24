@@ -147,6 +147,9 @@ const de = {
     thCocktail: "Cocktail",
     thServings: "Getränke",
     thEkNoLoss: "EK/Getränk",
+    thEkAtSoldShare: "EK bei Verkaufsquote",
+    thEkAtSoldShareTip:
+      "EK je Getränk, wenn nur der geplante Verkaufsanteil (siehe Einstellungen) tatsächlich benötigt wird. Bei Bestand/Kommissionsware kann dieser Preis wegen Gebinderundung höher als der reguläre EK ausfallen.",
     thSale: "VK",
     thMargin: "Marge",
     thFoodCost: "Wareneinsatz",
@@ -535,6 +538,9 @@ const en: typeof de = {
     thCocktail: "Cocktail",
     thServings: "Drinks",
     thEkNoLoss: "COGS/drink",
+    thEkAtSoldShare: "COGS at sell-through",
+    thEkAtSoldShareTip:
+      "COGS per drink if only the planned sell-through share (see settings) is actually needed. With stock/commission goods this can end up higher than the regular COGS because of package rounding.",
     thSale: "Sales price",
     thMargin: "Margin",
     thFoodCost: "Food cost",

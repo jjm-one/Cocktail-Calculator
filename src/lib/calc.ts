@@ -251,15 +251,22 @@ function effectiveUnitCost(
  * being applied together. Stock and commission-case rounding are netted per ingredient across
  * all selected recipes (mirroring the order logic), then spread back as a blended per-ml rate
  * so every recipe using that ingredient sees the same effective price.
+ *
+ * Each row also carries `ekAtSoldShare`, the same price but with stock-netting/commission
+ * rounding computed against `settings.soldPct` of the demand instead of the full planned
+ * amount — since a case/bottle minimum charged for less actual demand raises the effective
+ * per-drink rate, this is not simply `ek * soldPct`.
  */
 export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions): RecipeCalcRow[] {
   const { settings, recipes, purchases, plans } = state;
   const lossFactor = opts.includeLoss ? 1 + (Number(settings.consumptionLossPct) || 0) / 100 : 1;
   const bufferFactor = opts.includeBuffer ? 1 + (Number(settings.bufferPct) || 0) / 100 : 1;
   const yieldFactor = 1 - (Number(settings.yieldLossPct) || 0) / 100;
+  const soldFraction = (Number(settings.soldPct) || 0) / 100;
 
   const planned: { recipe: Recipe; servings: number; items: { ingredient: string; qtyPerDrink: number }[] }[] = [];
   const requiredMl: Record<string, number> = {};
+  const requiredMlAtSoldShare: Record<string, number> = {};
 
   for (const r of recipes) {
     const plan = plans[r.id] || DEFAULT_PLAN;
@@ -268,25 +275,34 @@ export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions):
     const scale = ingredientFactor(settings.defaultServingMl, r);
     const items = r.ingredients.map((ing) => ({ ingredient: ing.ingredient, qtyPerDrink: (Number(ing.ml) || 0) * scale }));
     for (const it of items) {
-      requiredMl[it.ingredient] = (requiredMl[it.ingredient] || 0) + it.qtyPerDrink * servings * lossFactor * bufferFactor;
+      const qty = it.qtyPerDrink * servings * lossFactor * bufferFactor;
+      requiredMl[it.ingredient] = (requiredMl[it.ingredient] || 0) + qty;
+      requiredMlAtSoldShare[it.ingredient] = (requiredMlAtSoldShare[it.ingredient] || 0) + qty * soldFraction;
     }
     planned.push({ recipe: r, servings, items });
   }
 
   const rate: Record<string, number> = {};
+  const rateAtSoldShare: Record<string, number> = {};
   for (const ingredient of Object.keys(requiredMl)) {
     const p = activePurchaseFor(purchases, ingredient);
     rate[ingredient] = effectiveUnitCost(p, requiredMl[ingredient], settings, opts);
+    rateAtSoldShare[ingredient] = effectiveUnitCost(p, requiredMlAtSoldShare[ingredient], settings, opts);
   }
 
   return planned.map(({ recipe, servings, items }) => {
     const ek = items.reduce((s, it) => s + it.qtyPerDrink * lossFactor * bufferFactor * (rate[it.ingredient] || 0), 0);
+    const ekAtSoldShare = items.reduce(
+      (s, it) => s + it.qtyPerDrink * lossFactor * bufferFactor * (rateAtSoldShare[it.ingredient] || 0),
+      0,
+    );
     const sale = Number(recipe.salePrice) || 0;
     const margin = sale - ek;
     return {
       recipe,
       servings,
       ek,
+      ekAtSoldShare,
       sale,
       margin,
       marginPct: sale ? (margin / sale) * 100 : 0,
