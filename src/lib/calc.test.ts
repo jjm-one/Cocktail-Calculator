@@ -246,11 +246,12 @@ describe('compute', () => {
     expect(result.stockCoveragePct).toBeCloseTo(75, 5);
   });
 
-  it('computes leftover stock at the sold share, excluding commission goods', () => {
+  it('computes leftover stock at the sold share, per ingredient and with/without the commission billing rule', () => {
     // defaultServingMl matches the recipe's total ml (400), so the recipe scale factor is 1:1.
-    // Non-commission: 5 drinks * 200ml = 1000ml required -> 1 bottle (1000ml) bought.
-    // At a 50% sold share only 500ml is actually used, leaving 500ml (worth 5 €) on the shelf.
-    // Commission: same shape, but must be excluded entirely from the leftover total.
+    // Both Vodka (regular) and Rum (commission) need 5 drinks * 200ml = 1000ml -> 1 bottle bought.
+    // At a 50% sold share only 500ml of each is actually used, leaving 500ml (worth 5 €) each.
+    // With the commission billing rule applied, Rum's leftover doesn't strand (only consumption
+    // is billed); without it, Rum counts the same as Vodka.
     const state = makeState({
       settings: makeSettings({ defaultServingMl: 400, soldPct: 50 }),
       purchases: [
@@ -268,8 +269,15 @@ describe('compute', () => {
       plans: { r1: { mode: 'pieces', value: 5, unit: 'ml', selected: true } },
     });
     const result = compute(state);
-    expect(result.totalLeftoverMl).toBeCloseTo(500, 5);
-    expect(result.totalLeftoverValue).toBeCloseTo(5, 5);
+    expect(result.leftoverRows).toHaveLength(2);
+    for (const row of result.leftoverRows) {
+      expect(row.leftoverMl).toBeCloseTo(500, 5);
+      expect(row.leftoverValue).toBeCloseTo(5, 5);
+    }
+    expect(result.totalLeftoverMlCommission).toBeCloseTo(500, 5);
+    expect(result.totalLeftoverValueCommission).toBeCloseTo(5, 5);
+    expect(result.totalLeftoverMlNoCommission).toBeCloseTo(1000, 5);
+    expect(result.totalLeftoverValueNoCommission).toBeCloseTo(10, 5);
   });
 
   it('matches the 100%-share metrics when soldPct is 100', () => {

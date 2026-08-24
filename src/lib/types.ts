@@ -102,6 +102,15 @@ export interface OrderRow {
   missing: boolean;
 }
 
+export interface LeftoverRow {
+  ingredient: string;
+  purchase: Purchase;
+  /** Volume left on the shelf (already bought or in stock) if only settings.soldPct of the plan sells. */
+  leftoverMl: number;
+  /** Value of leftoverMl at gross purchase price. */
+  leftoverValue: number;
+}
+
 export interface RecipeCalcOptions {
   includeStock: boolean;
   includeLoss: boolean;
@@ -135,10 +144,16 @@ export interface ComputeResult {
   stockSavings: number;
   /** stockSavings as a share of totalOrderGrossNoStock. */
   stockCoveragePct: number;
-  /** Volume left on the shelf (already bought or in stock) if only soldPct of the plan sells; excludes commission goods. */
-  totalLeftoverMl: number;
-  /** Value of totalLeftoverMl at gross purchase price. */
-  totalLeftoverValue: number;
+  /** Per-ingredient leftover volume/value if only soldPct of the plan sells; includes commission goods. */
+  leftoverRows: LeftoverRow[];
+  /** Sum of leftoverRows' volume, excluding commission goods (billed on actual consumption only — nothing of theirs strands). */
+  totalLeftoverMlCommission: number;
+  /** Value of totalLeftoverMlCommission at gross purchase price. */
+  totalLeftoverValueCommission: number;
+  /** Sum of leftoverRows' volume, with commission goods treated like regular purchased stock. */
+  totalLeftoverMlNoCommission: number;
+  /** Value of totalLeftoverMlNoCommission at gross purchase price. */
+  totalLeftoverValueNoCommission: number;
   totalRevenue: number;
   totalRevenueAtSold: number;
   totalServings: number;

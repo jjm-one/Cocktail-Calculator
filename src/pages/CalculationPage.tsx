@@ -273,9 +273,36 @@ export default function CalculationPage() {
         </div>
 
         <h4>{t.calculation.sectionLeftover}</h4>
-        <div className="metric-grid">
-          <Metric label={t.calculation.leftoverMl} tip={t.calculation.leftoverMlTip} value={`${num(computed.totalLeftoverMl / 1000, lang, 2)} l`} />
-          <Metric label={t.calculation.leftoverValue} tip={t.calculation.leftoverValueTip} value={money(computed.totalLeftoverValue, lang, currency)} />
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th className="num">
+                  <TipLabel label={t.calculation.leftoverColCommission} tip={t.calculation.leftoverColCommissionTip} />
+                </th>
+                <th className="num">
+                  <TipLabel label={t.calculation.leftoverColNoCommission} tip={t.calculation.leftoverColNoCommissionTip} />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <TipLabel label={t.calculation.leftoverMl} tip={t.calculation.leftoverMlTip} />
+                </td>
+                <td className="num">{num(computed.totalLeftoverMlCommission / 1000, lang, 2)} l</td>
+                <td className="num">{num(computed.totalLeftoverMlNoCommission / 1000, lang, 2)} l</td>
+              </tr>
+              <tr>
+                <td>
+                  <TipLabel label={t.calculation.leftoverValue} tip={t.calculation.leftoverValueTip} />
+                </td>
+                <td className="num">{money(computed.totalLeftoverValueCommission, lang, currency)}</td>
+                <td className="num">{money(computed.totalLeftoverValueNoCommission, lang, currency)}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <h4>{t.calculation.sectionBreakEven}</h4>

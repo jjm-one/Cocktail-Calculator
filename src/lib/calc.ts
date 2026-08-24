@@ -2,6 +2,7 @@ import type {
   AppState,
   CommissionMode,
   ComputeResult,
+  LeftoverRow,
   OrderRow,
   Plan,
   Purchase,
@@ -189,20 +190,31 @@ export function compute(state: AppState): ComputeResult {
   const stockCoveragePct = totalOrderGrossNoStock ? (stockSavings / totalOrderGrossNoStock) * 100 : 0;
 
   // Volume/value that ends up on the shelf if only `soldPct` of the plan is actually sold.
-  // Commission goods are excluded: they're billed on what's actually opened, so there's no
-  // stranded purchase to strand — unlike stock you've already committed to buying outright.
-  let totalLeftoverMl = 0;
-  let totalLeftoverValue = 0;
+  // Computed per ingredient for every purchased item; commission goods are billed on what's
+  // actually opened, so — with the commission billing rule applied — nothing of theirs is
+  // ever stranded. Without that rule (treated like regular stock you've committed to buying
+  // outright), their leftover counts the same as any other ingredient's.
+  const leftoverRows: LeftoverRow[] = [];
+  let totalLeftoverMlCommission = 0;
+  let totalLeftoverValueCommission = 0;
+  let totalLeftoverMlNoCommission = 0;
+  let totalLeftoverValueNoCommission = 0;
   for (const row of orderRows) {
     const p = row.purchase;
-    if (!p || p.commission) continue;
+    if (!p) continue;
     const packageMl = Number(p.packageMl) || 1;
     const stockUsedMl = Math.min(row.stockMl, row.requiredMl);
     const totalAvailableMl = stockUsedMl + row.orderedMl;
     const consumedAtSoldMl = row.requiredMl * soldPct;
     const leftoverMl = Math.max(0, totalAvailableMl - consumedAtSoldMl);
-    totalLeftoverMl += leftoverMl;
-    totalLeftoverValue += (leftoverMl / packageMl) * grossPrice(p);
+    const leftoverValue = (leftoverMl / packageMl) * grossPrice(p);
+    leftoverRows.push({ ingredient: row.ingredient, purchase: p, leftoverMl, leftoverValue });
+    totalLeftoverMlNoCommission += leftoverMl;
+    totalLeftoverValueNoCommission += leftoverValue;
+    if (!p.commission) {
+      totalLeftoverMlCommission += leftoverMl;
+      totalLeftoverValueCommission += leftoverValue;
+    }
   }
 
   const commissionCostAt = (fraction: number) => {
@@ -245,8 +257,11 @@ export function compute(state: AppState): ComputeResult {
     totalOrderGrossNoStock,
     stockSavings,
     stockCoveragePct,
-    totalLeftoverMl,
-    totalLeftoverValue,
+    leftoverRows,
+    totalLeftoverMlCommission,
+    totalLeftoverValueCommission,
+    totalLeftoverMlNoCommission,
+    totalLeftoverValueNoCommission,
     totalRevenue,
     totalRevenueAtSold,
     totalServings,

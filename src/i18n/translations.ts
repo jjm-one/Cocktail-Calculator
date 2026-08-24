@@ -13,6 +13,7 @@ const de = {
     recipes: "Rezepte",
     planning: "Planung",
     calculation: "Kalkulation",
+    leftover: "Restbestand",
     data: "Daten",
     settings: "Einstellungen",
     help: "Hilfe",
@@ -194,9 +195,15 @@ const de = {
     sectionLeftover: "Voraussichtlicher Restbestand bei Verkaufsquote",
     leftoverMl: "Restmenge",
     leftoverMlTip:
-      "Menge, die auf Lager bleibt, wenn nur die geplante Verkaufsquote tatsächlich verkauft wird (bereits gekaufte oder vorhandene Ware abzüglich Verbrauch bei Verkaufsquote). Kommissionsware ist ausgenommen, da dort nur der tatsächliche Verbrauch abgerechnet wird und daher nichts stranden kann.",
+      "Menge, die auf Lager bleibt, wenn nur die geplante Verkaufsquote tatsächlich verkauft wird (bereits gekaufte oder vorhandene Ware abzüglich Verbrauch bei Verkaufsquote). Siehe Restbestand-Seite für die Aufschlüsselung je Zutat.",
     leftoverValue: "Restwert",
     leftoverValueTip: "Bewertung der Restmenge zum EK-Preis – gebundenes Kapital, falls nur die geplante Verkaufsquote verkauft wird.",
+    leftoverColCommission: "mit Kommission",
+    leftoverColCommissionTip:
+      "Kommissionsware wie tatsächlich abgerechnet: bezahlt wird nur der wirkliche Verbrauch, daher bleibt bei ihr rechnerisch nichts ungenutzt hängen.",
+    leftoverColNoCommission: "ohne Kommission",
+    leftoverColNoCommissionTip:
+      "Kommissionsware wie normale, fest eingekaufte Ware behandelt – auch ihr ungenutzter Anteil bei Verkaufsquote zählt hier als gebundenes Kapital.",
     sectionBreakEven: "Break-even & Rendite",
     returnOnFoodCost: "Rendite auf Wareneinsatz",
     returnOnFoodCostTip: "Ergebnis bei 100 % Abverkauf geteilt durch den Bestell-EK brutto.",
@@ -204,6 +211,21 @@ const de = {
     breakEvenNoCommissionTip: "Mindest-Abverkaufsanteil, ab dem der Erlös den vollen Bestell-EK deckt (Kommissionsware wie normale Ware gerechnet).",
     breakEvenCommission: "Break-even mit Kommission",
     breakEvenCommissionTip: "Mindest-Abverkaufsanteil, ab dem der Erlös die tatsächlichen, Kommissions-gerechten Kosten deckt.",
+  },
+  leftover: {
+    title: "Restbestand",
+    body: "Wie viel von welcher Zutat voraussichtlich auf Lager bleibt, wenn nur die geplante Verkaufsquote tatsächlich verkauft wird.",
+    thIngredient: "Zutat",
+    thProduct: "Produkt",
+    thCommission: "Kommission",
+    thLeftoverMl: "Restmenge",
+    thLeftoverValue: "Restwert",
+    empty: "Keine geplanten Mengen.",
+    totalCommission: "Summe mit Kommission",
+    totalCommissionTip: "Kommissionsware wie tatsächlich abgerechnet: nur der wirkliche Verbrauch kostet etwas, daher bleibt bei ihr nichts ungenutzt hängen.",
+    totalNoCommission: "Summe ohne Kommission",
+    totalNoCommissionTip:
+      "Kommissionsware wie normale, fest eingekaufte Ware behandelt – auch ihr ungenutzter Anteil bei Verkaufsquote zählt als gebundenes Kapital.",
   },
   data: {
     title: "Daten",
@@ -439,6 +461,7 @@ const en: typeof de = {
     recipes: "Recipes",
     planning: "Planning",
     calculation: "Calculation",
+    leftover: "Leftover stock",
     data: "Data",
     settings: "Settings",
     help: "Help",
@@ -619,9 +642,15 @@ const en: typeof de = {
     sectionLeftover: "Expected leftover stock at planned sell-through",
     leftoverMl: "Leftover volume",
     leftoverMlTip:
-      "Volume left on the shelf if only the planned sell-through share is actually sold (goods already bought or on hand, minus consumption at that share). Commission goods are excluded since only actual consumption is billed there, so nothing can be stranded.",
+      "Volume left on the shelf if only the planned sell-through share is actually sold (goods already bought or on hand, minus consumption at that share). See the leftover stock page for the breakdown per ingredient.",
     leftoverValue: "Leftover value",
     leftoverValueTip: "The leftover volume valued at purchase price – capital tied up if only the planned sell-through share sells.",
+    leftoverColCommission: "with commission",
+    leftoverColCommissionTip:
+      "Commission goods billed as they actually are: only real consumption costs anything, so nothing of theirs is stranded.",
+    leftoverColNoCommission: "without commission",
+    leftoverColNoCommissionTip:
+      "Commission goods treated like regular, outright-purchased stock — their unused share at the sold-through rate also counts as capital tied up here.",
     sectionBreakEven: "Break-even & return",
     returnOnFoodCost: "Return on cost of goods",
     returnOnFoodCostTip: "Result at 100% sell-through divided by the gross purchase cost.",
@@ -629,6 +658,21 @@ const en: typeof de = {
     breakEvenNoCommissionTip: "Minimum sell-through share at which revenue covers the full gross purchase cost (commission goods treated like regular goods).",
     breakEvenCommission: "Break-even with commission",
     breakEvenCommissionTip: "Minimum sell-through share at which revenue covers the actual, commission-aware cost.",
+  },
+  leftover: {
+    title: "Leftover stock",
+    body: "How much of which ingredient is expected to stay on the shelf if only the planned sell-through share is actually sold.",
+    thIngredient: "Ingredient",
+    thProduct: "Product",
+    thCommission: "Commission",
+    thLeftoverMl: "Leftover volume",
+    thLeftoverValue: "Leftover value",
+    empty: "No planned quantities.",
+    totalCommission: "Total with commission",
+    totalCommissionTip: "Commission goods billed as they actually are: only real consumption costs anything, so nothing of theirs is stranded.",
+    totalNoCommission: "Total without commission",
+    totalNoCommissionTip:
+      "Commission goods treated like regular, outright-purchased stock — their unused share at the sold-through rate also counts as capital tied up.",
   },
   data: {
     title: "Data",
