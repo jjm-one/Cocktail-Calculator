@@ -226,7 +226,7 @@ export function compute(state: AppState): ComputeResult {
         total += row.orderCostGross;
         continue;
       }
-      const needed = row.requiredMl * fraction;
+      const needed = Math.max(0, row.requiredMl * fraction - row.stockMl);
       const bottles = Math.ceil(needed / (Number(p.packageMl) || 1));
       const perCase = unitsPerCase(p);
       const charged = settings.commissionMode === 'case' ? Math.ceil(bottles / perCase) * perCase : bottles;
@@ -314,7 +314,8 @@ function effectiveUnitCost(
  * Each row also carries `ekAtSoldShare`, the same price but with stock-netting/commission
  * rounding computed against `settings.soldPct` of the demand instead of the full planned
  * amount — since a case/bottle minimum charged for less actual demand raises the effective
- * per-drink rate, this is not simply `ek * soldPct`.
+ * per-drink rate, this is not simply `ek * soldPct`. `marginAtSoldShare`/`marginPctAtSoldShare`
+ * are `margin`/`marginPct` recomputed against that same price, for direct comparison.
  */
 export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions): RecipeCalcRow[] {
   const { settings, recipes, purchases, plans } = state;
@@ -357,6 +358,7 @@ export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions):
     );
     const sale = Number(recipe.salePrice) || 0;
     const margin = sale - ek;
+    const marginAtSoldShare = sale - ekAtSoldShare;
     return {
       recipe,
       servings,
@@ -365,6 +367,8 @@ export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions):
       sale,
       margin,
       marginPct: sale ? (margin / sale) * 100 : 0,
+      marginAtSoldShare,
+      marginPctAtSoldShare: sale ? (marginAtSoldShare / sale) * 100 : 0,
       foodCostPct: sale ? (ek / sale) * 100 : 0,
       markupFactor: ek ? sale / ek : 0,
       totalContribution: margin * servings * yieldFactor,

@@ -205,6 +205,22 @@ describe('compute', () => {
     expect(order.chargedBottles).toBe(1);
   });
 
+  it('nets existing stock against commission-goods cost at the sold share, matching the 100%-share order cost', () => {
+    // defaultServingMl matches the recipe's ml, so the recipe scale factor is 1:1.
+    // 10 drinks * 200ml = 2000ml required; 1 bottle (1000ml) already in stock leaves 1000ml
+    // (1 bottle) to actually charge for -> 10 €. At soldPct 100%, commissionCostAtSold must
+    // agree with totalOrderGross; before netting stock here it would double-count as 20 €.
+    const state = makeState({
+      settings: makeSettings({ defaultServingMl: 200, commissionMode: 'case' }),
+      purchases: [makePurchase({ price: 10, packageMl: 1000, unitsPerCase: 1, commission: true, stockUnits: 1 })],
+      recipes: [makeRecipe({ ingredients: [{ id: 'i1', ingredient: 'Vodka', ml: 200 }] })],
+      plans: { r1: { mode: 'pieces', value: 10, unit: 'ml', selected: true } },
+    });
+    const result = compute(state);
+    expect(result.totalOrderGross).toBeCloseTo(10, 5);
+    expect(result.commissionCostAtSold).toBeCloseTo(result.totalOrderGross, 5);
+  });
+
   it('aggregates a shared ingredient across multiple recipes', () => {
     // Both recipes use a 100ml base (== defaultServingMl), so each ingredient
     // scales 1:1 and the per-drink quantity is exactly the listed ml amount.
@@ -377,5 +393,8 @@ describe('computeRecipeCalcRows', () => {
     expect(row.ek).toBeCloseTo(180, 5);
     expect(row.ekAtSoldShare).toBeCloseTo(240, 5);
     expect(row.ekAtSoldShare).toBeGreaterThan(row.ek);
+    // marginAtSoldShare mirrors margin but against ekAtSoldShare, so it drops further.
+    expect(row.marginAtSoldShare).toBeCloseTo(row.sale - 240, 5);
+    expect(row.marginAtSoldShare).toBeLessThan(row.margin);
   });
 });

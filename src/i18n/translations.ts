@@ -155,6 +155,9 @@ const de = {
       "EK je Getränk, wenn nur der geplante Verkaufsanteil (siehe Einstellungen) tatsächlich benötigt wird. Bei Bestand/Kommissionsware kann dieser Preis wegen Gebinderundung höher als der reguläre EK ausfallen.",
     thSale: "VK",
     thMargin: "Marge",
+    thMarginAtSoldShare: "Marge bei Verkaufsquote",
+    thMarginAtSoldShareTip:
+      "Marge je Getränk auf Basis des EK bei Verkaufsquote statt des vollen Plan-EK. Beachte: anders als die Gesamtkalkulation unten unterstellt dieser Wert weiterhin, dass nur exakt der Bedarf der Verkaufsquote eingekauft wird – nicht, dass bereits für die volle Planmenge eingekauft wurde und der Rest ungenutzt bleibt.",
     thFoodCost: "Wareneinsatz",
     thMarkup: "Aufschlag",
     thContribution: "Deckungsbeitrag gesamt",
@@ -602,6 +605,9 @@ const en: typeof de = {
       "COGS per drink if only the planned sell-through share (see settings) is actually needed. With stock/commission goods this can end up higher than the regular COGS because of package rounding.",
     thSale: "Sales price",
     thMargin: "Margin",
+    thMarginAtSoldShare: "Margin at sell-through",
+    thMarginAtSoldShareTip:
+      "Margin per drink based on COGS at sell-through instead of the full-plan COGS. Note: unlike the overall calculation below, this value still assumes only the sell-through demand is bought — not that the full planned quantity was already purchased and the rest goes unused.",
     thFoodCost: "Food cost",
     thMarkup: "Markup",
     thContribution: "Total contribution",

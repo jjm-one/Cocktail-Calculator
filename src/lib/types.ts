@@ -127,6 +127,9 @@ export interface RecipeCalcRow {
   sale: number;
   margin: number;
   marginPct: number;
+  /** margin, but based on ekAtSoldShare instead of ek. */
+  marginAtSoldShare: number;
+  marginPctAtSoldShare: number;
   foodCostPct: number;
   markupFactor: number;
   totalContribution: number;
