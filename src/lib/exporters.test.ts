@@ -44,6 +44,7 @@ function makeOrderRow(overrides: Partial<OrderRow> = {}): OrderRow {
     surplusValue: 0,
     orderCostGross: 15,
     orderCostNet: 12.6,
+    orderCostGrossNoStock: 15,
     missing: false,
     ...overrides,
   };
@@ -55,6 +56,11 @@ function makeComputeResult(orderRows: OrderRow[]): ComputeResult {
     orderRows,
     totalOrderGross: 0,
     totalOrderNet: 0,
+    totalOrderGrossNoStock: 0,
+    stockSavings: 0,
+    stockCoveragePct: 0,
+    totalLeftoverMl: 0,
+    totalLeftoverValue: 0,
     totalRevenue: 0,
     totalRevenueAtSold: 0,
     totalServings: 0,
@@ -68,7 +74,10 @@ function makeComputeResult(orderRows: OrderRow[]): ComputeResult {
     averageRevenuePerDrink: 0,
     averageOrderCostPerDrink: 0,
     overallFoodCostPct: 0,
+    foodCostPctAtSold: 0,
     returnOnCostPct: 0,
+    grossMarginPct: 0,
+    grossMarginPctAtSold: 0,
     taxAmount: 0,
   };
 }

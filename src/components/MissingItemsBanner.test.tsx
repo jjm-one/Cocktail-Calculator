@@ -26,6 +26,7 @@ function makeOrderRow(overrides: Partial<OrderRow> = {}): OrderRow {
     surplusValue: 0,
     orderCostGross: 0,
     orderCostNet: 0,
+    orderCostGrossNoStock: 0,
     missing: true,
     ...overrides,
   };

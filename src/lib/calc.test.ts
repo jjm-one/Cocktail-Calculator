@@ -231,6 +231,53 @@ describe('compute', () => {
     expect(row.markupFactor).toBe(0);
     expect(row.marginPct).toBe(0);
   });
+
+  it('reports how much existing stock reduces the order cost by', () => {
+    // 40 drinks * 100ml = 4000ml required; 3 bottles (3000ml) already in stock leave 1000ml
+    // (1 bottle) to actually buy: 10 € vs. 40 € if stock were ignored -> 30 € saved, 75% covered.
+    const state = makeState({
+      purchases: [makePurchase({ price: 10, packageMl: 1000, stockUnits: 3 })],
+      plans: { r1: { mode: 'pieces', value: 40, unit: 'ml', selected: true } },
+    });
+    const result = compute(state);
+    expect(result.totalOrderGrossNoStock).toBeCloseTo(40, 5);
+    expect(result.totalOrderGross).toBeCloseTo(10, 5);
+    expect(result.stockSavings).toBeCloseTo(30, 5);
+    expect(result.stockCoveragePct).toBeCloseTo(75, 5);
+  });
+
+  it('computes leftover stock at the sold share, excluding commission goods', () => {
+    // defaultServingMl matches the recipe's total ml (400), so the recipe scale factor is 1:1.
+    // Non-commission: 5 drinks * 200ml = 1000ml required -> 1 bottle (1000ml) bought.
+    // At a 50% sold share only 500ml is actually used, leaving 500ml (worth 5 €) on the shelf.
+    // Commission: same shape, but must be excluded entirely from the leftover total.
+    const state = makeState({
+      settings: makeSettings({ defaultServingMl: 400, soldPct: 50 }),
+      purchases: [
+        makePurchase({ price: 10, packageMl: 1000, stockUnits: 0 }),
+        makePurchase({ id: 'p2', ingredient: 'Rum', price: 10, packageMl: 1000, commission: true }),
+      ],
+      recipes: [
+        makeRecipe({
+          ingredients: [
+            { id: 'i1', ingredient: 'Vodka', ml: 200 },
+            { id: 'i2', ingredient: 'Rum', ml: 200 },
+          ],
+        }),
+      ],
+      plans: { r1: { mode: 'pieces', value: 5, unit: 'ml', selected: true } },
+    });
+    const result = compute(state);
+    expect(result.totalLeftoverMl).toBeCloseTo(500, 5);
+    expect(result.totalLeftoverValue).toBeCloseTo(5, 5);
+  });
+
+  it('matches the 100%-share metrics when soldPct is 100', () => {
+    const result = compute(makeState({ settings: makeSettings({ soldPct: 100 }) }));
+    expect(result.grossMarginPctAtSold).toBeCloseTo(result.grossMarginPct, 5);
+    expect(result.foodCostPctAtSold).toBeCloseTo(result.overallFoodCostPct, 5);
+    expect(result.profitAtSold).toBeCloseTo(result.profit, 5);
+  });
 });
 
 describe('computeRecipeCalcRows', () => {

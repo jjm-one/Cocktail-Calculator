@@ -1,5 +1,6 @@
 import type {
   AppState,
+  CommissionMode,
   ComputeResult,
   OrderRow,
   Plan,
@@ -61,6 +62,24 @@ export function planLiquidMl(defaultServingMl: number, plan: Plan | undefined): 
 export function ingredientFactor(defaultServingMl: number, r: Recipe): number {
   const base = recipeBaseMl(r) || 170;
   return defaultServingMl / base;
+}
+
+/** Rounds a required volume up to whole bottles/cases and prices the resulting charge. */
+function chargeForPackaging(requiredMl: number, p: Purchase, commissionMode: CommissionMode) {
+  const packageMl = Number(p.packageMl) || 1;
+  const perCase = unitsPerCase(p);
+  const bottles = Math.ceil(requiredMl / packageMl);
+  const cases = Math.ceil(bottles / perCase);
+  const chargedBottles = p.commission && commissionMode === 'case' ? cases * perCase : bottles;
+  const orderedMl = chargedBottles * packageMl;
+  return {
+    bottles,
+    cases,
+    chargedBottles,
+    orderedMl,
+    costGross: chargedBottles * grossPrice(p),
+    costNet: chargedBottles * netPrice(p),
+  };
 }
 
 export function compute(state: AppState): ComputeResult {
@@ -129,45 +148,62 @@ export function compute(state: AppState): ComputeResult {
         surplusValue: 0,
         orderCostGross: 0,
         orderCostNet: 0,
+        orderCostGrossNoStock: 0,
         missing: true,
       };
     }
     const packageMl = Number(p.packageMl) || 1;
-    const perCase = unitsPerCase(p);
     const stockMl = Math.max(0, Number(p.stockUnits) || 0) * packageMl;
     const netRequiredMl = Math.max(0, n.requiredMl - stockMl);
-    const bottles = Math.ceil(netRequiredMl / packageMl);
-    const cases = Math.ceil(bottles / perCase);
-    let chargedBottles = bottles;
-    if (p.commission && settings.commissionMode === 'case') chargedBottles = cases * perCase;
-    const orderedMl = chargedBottles * packageMl;
-    const surplusMl = Math.max(0, orderedMl - netRequiredMl);
-    const costG = chargedBottles * grossPrice(p);
-    const costN = chargedBottles * netPrice(p);
+    const charge = chargeForPackaging(netRequiredMl, p, settings.commissionMode);
+    const chargeNoStock = chargeForPackaging(n.requiredMl, p, settings.commissionMode);
+    const surplusMl = Math.max(0, charge.orderedMl - netRequiredMl);
     return {
       ...n,
       netRequiredMl,
       stockMl,
       purchase: p,
-      bottles,
-      cases,
-      chargedBottles,
-      orderedMl,
+      bottles: charge.bottles,
+      cases: charge.cases,
+      chargedBottles: charge.chargedBottles,
+      orderedMl: charge.orderedMl,
       surplusMl,
       surplusValue: (surplusMl / packageMl) * grossPrice(p),
-      orderCostGross: costG,
-      orderCostNet: costN,
+      orderCostGross: charge.costGross,
+      orderCostNet: charge.costNet,
+      orderCostGrossNoStock: chargeNoStock.costGross,
       missing: false,
     };
   });
 
   const totalOrderGross = orderRows.reduce((s, x) => s + x.orderCostGross, 0);
   const totalOrderNet = orderRows.reduce((s, x) => s + x.orderCostNet, 0);
+  const totalOrderGrossNoStock = orderRows.reduce((s, x) => s + x.orderCostGrossNoStock, 0);
   const totalRevenue = recipeRows.reduce((s, x) => s + x.revenueWithYield, 0);
   const totalRevenueAtSold = recipeRows.reduce((s, x) => s + x.revenueAtSoldPct, 0);
   const totalServings = recipeRows.reduce((s, x) => s + x.servings, 0);
   const totalSurplusValue = orderRows.reduce((s, x) => s + x.surplusValue, 0);
   const totalSurplusMl = orderRows.reduce((s, x) => s + x.surplusMl, 0);
+
+  const stockSavings = Math.max(0, totalOrderGrossNoStock - totalOrderGross);
+  const stockCoveragePct = totalOrderGrossNoStock ? (stockSavings / totalOrderGrossNoStock) * 100 : 0;
+
+  // Volume/value that ends up on the shelf if only `soldPct` of the plan is actually sold.
+  // Commission goods are excluded: they're billed on what's actually opened, so there's no
+  // stranded purchase to strand — unlike stock you've already committed to buying outright.
+  let totalLeftoverMl = 0;
+  let totalLeftoverValue = 0;
+  for (const row of orderRows) {
+    const p = row.purchase;
+    if (!p || p.commission) continue;
+    const packageMl = Number(p.packageMl) || 1;
+    const stockUsedMl = Math.min(row.stockMl, row.requiredMl);
+    const totalAvailableMl = stockUsedMl + row.orderedMl;
+    const consumedAtSoldMl = row.requiredMl * soldPct;
+    const leftoverMl = Math.max(0, totalAvailableMl - consumedAtSoldMl);
+    totalLeftoverMl += leftoverMl;
+    totalLeftoverValue += (leftoverMl / packageMl) * grossPrice(p);
+  }
 
   const commissionCostAt = (fraction: number) => {
     let total = 0;
@@ -206,6 +242,11 @@ export function compute(state: AppState): ComputeResult {
     orderRows,
     totalOrderGross,
     totalOrderNet,
+    totalOrderGrossNoStock,
+    stockSavings,
+    stockCoveragePct,
+    totalLeftoverMl,
+    totalLeftoverValue,
     totalRevenue,
     totalRevenueAtSold,
     totalServings,
@@ -219,7 +260,10 @@ export function compute(state: AppState): ComputeResult {
     averageRevenuePerDrink: totalServings ? totalRevenue / totalServings : 0,
     averageOrderCostPerDrink: totalServings ? totalOrderGross / totalServings : 0,
     overallFoodCostPct: totalRevenue ? (totalOrderGross / totalRevenue) * 100 : 0,
+    foodCostPctAtSold: totalRevenueAtSold ? (commissionCostAtSold / totalRevenueAtSold) * 100 : 0,
     returnOnCostPct: totalOrderGross ? (profit / totalOrderGross) * 100 : 0,
+    grossMarginPct: totalRevenue ? (profit / totalRevenue) * 100 : 0,
+    grossMarginPctAtSold: totalRevenueAtSold ? (profitAtSold / totalRevenueAtSold) * 100 : 0,
     taxAmount: totalOrderGross - totalOrderNet,
   };
 }

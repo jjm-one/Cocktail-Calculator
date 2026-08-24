@@ -95,6 +95,8 @@ export interface OrderRow {
   surplusValue: number;
   orderCostGross: number;
   orderCostNet: number;
+  /** orderCostGross if stock on hand were ignored, i.e. the full requiredMl were bought fresh. */
+  orderCostGrossNoStock: number;
   missing: boolean;
 }
 
@@ -125,6 +127,16 @@ export interface ComputeResult {
   orderRows: OrderRow[];
   totalOrderGross: number;
   totalOrderNet: number;
+  /** totalOrderGross if existing stock were ignored, i.e. everything required were bought fresh. */
+  totalOrderGrossNoStock: number;
+  /** totalOrderGrossNoStock - totalOrderGross: how much existing stock reduces the order cost by. */
+  stockSavings: number;
+  /** stockSavings as a share of totalOrderGrossNoStock. */
+  stockCoveragePct: number;
+  /** Volume left on the shelf (already bought or in stock) if only soldPct of the plan sells; excludes commission goods. */
+  totalLeftoverMl: number;
+  /** Value of totalLeftoverMl at gross purchase price. */
+  totalLeftoverValue: number;
   totalRevenue: number;
   totalRevenueAtSold: number;
   totalServings: number;
@@ -138,6 +150,12 @@ export interface ComputeResult {
   averageRevenuePerDrink: number;
   averageOrderCostPerDrink: number;
   overallFoodCostPct: number;
+  /** Food cost ratio at the sold share: commissionCostAtSold / totalRevenueAtSold. */
+  foodCostPctAtSold: number;
   returnOnCostPct: number;
+  /** profit / totalRevenue: gross margin at 100% of the plan. */
+  grossMarginPct: number;
+  /** profitAtSold / totalRevenueAtSold: gross margin at the sold share. */
+  grossMarginPctAtSold: number;
   taxAmount: number;
 }

@@ -15,6 +15,30 @@ const DEFAULT_CALC_OPTIONS: RecipeCalcOptions = {
   includeCommission: false,
 };
 
+function TipLabel({ label, tip }: { label: string; tip?: string }) {
+  return (
+    <>
+      {label}{' '}
+      {tip && (
+        <span className="tooltip" data-tip={tip}>
+          ?
+        </span>
+      )}
+    </>
+  );
+}
+
+function Metric({ label, tip, value }: { label: string; tip?: string; value: string }) {
+  return (
+    <div className="metric">
+      <span>
+        <TipLabel label={label} tip={tip} />
+      </span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
 export default function CalculationPage() {
   const { lang, t } = useT();
   const { state, computed } = useAppState();
@@ -57,20 +81,37 @@ export default function CalculationPage() {
   );
   const { rows: visibleRows, sort, toggleSort, filters, setFilter } = useSortFilter(rows, columns);
 
-  const overallRows: [string, string][] = [
-    [t.calculation.grossOrderCost, money(computed.totalOrderGross, lang, currency)],
-    [t.calculation.includedTax, money(computed.taxAmount, lang, currency)],
-    [t.calculation.revenueAt100, money(computed.totalRevenue, lang, currency)],
-    [t.calculation.avgRevenuePerDrink, money(computed.averageRevenuePerDrink, lang, currency)],
-    [t.calculation.orderCostPerDrink, money(computed.averageOrderCostPerDrink, lang, currency)],
-    [t.calculation.foodCostRatioTotal, `${num(computed.overallFoodCostPct, lang, 1)} %`],
-    [t.calculation.returnOnFoodCost, `${num(computed.returnOnCostPct, lang, 1)} %`],
-    [t.calculation.packageSurplus, `${money(computed.totalSurplusValue, lang, currency)} · ${num(computed.totalSurplusMl / 1000, lang, 2)} l`],
-    [t.calculation.revenueAtSoldShare, money(computed.totalRevenueAtSold, lang, currency)],
-    [t.calculation.costAtSoldSharePlusCommission, money(computed.commissionCostAtSold, lang, currency)],
-    [t.calculation.resultAtSoldShare, money(computed.profitAtSold, lang, currency)],
-    [t.calculation.breakEvenNoCommission, be(computed.beNoCommission)],
-    [t.calculation.breakEvenCommission, be(computed.beCommission)],
+  const comparisonRows: [string, string, string, string][] = [
+    [
+      t.calculation.cmpRevenue,
+      t.calculation.cmpRevenueTip,
+      money(computed.totalRevenue, lang, currency),
+      money(computed.totalRevenueAtSold, lang, currency),
+    ],
+    [
+      t.calculation.cmpCost,
+      t.calculation.cmpCostTip,
+      money(computed.totalOrderGross, lang, currency),
+      money(computed.commissionCostAtSold, lang, currency),
+    ],
+    [
+      t.calculation.cmpResult,
+      t.calculation.cmpResultTip,
+      money(computed.profit, lang, currency),
+      money(computed.profitAtSold, lang, currency),
+    ],
+    [
+      t.calculation.cmpFoodCost,
+      t.calculation.cmpFoodCostTip,
+      `${num(computed.overallFoodCostPct, lang, 1)} %`,
+      `${num(computed.foodCostPctAtSold, lang, 1)} %`,
+    ],
+    [
+      t.calculation.cmpGrossMargin,
+      t.calculation.cmpGrossMarginTip,
+      `${num(computed.grossMarginPct, lang, 1)} %`,
+      `${num(computed.grossMarginPctAtSold, lang, 1)} %`,
+    ],
   ];
 
   return (
@@ -166,13 +207,83 @@ export default function CalculationPage() {
 
       <article className="card top-gap">
         <h3>{t.calculation.overall}</h3>
+
+        <h4>{t.calculation.sectionOrderCosts}</h4>
         <div className="metric-grid">
-          {overallRows.map(([label, value]) => (
-            <div className="metric" key={label}>
-              <span>{label}</span>
-              <strong>{value}</strong>
-            </div>
-          ))}
+          <Metric label={t.calculation.grossOrderCost} tip={t.calculation.grossOrderCostTip} value={money(computed.totalOrderGross, lang, currency)} />
+          <Metric label={t.calculation.includedTax} tip={t.calculation.includedTaxTip} value={money(computed.taxAmount, lang, currency)} />
+          <Metric
+            label={t.calculation.orderCostNoStock}
+            tip={t.calculation.orderCostNoStockTip}
+            value={money(computed.totalOrderGrossNoStock, lang, currency)}
+          />
+          <Metric
+            label={t.calculation.stockSavings}
+            tip={t.calculation.stockSavingsTip}
+            value={`${money(computed.stockSavings, lang, currency)} (${num(computed.stockCoveragePct, lang, 1)} %)`}
+          />
+          <Metric
+            label={t.calculation.packageSurplus}
+            tip={t.calculation.packageSurplusTip}
+            value={`${money(computed.totalSurplusValue, lang, currency)} · ${num(computed.totalSurplusMl / 1000, lang, 2)} l`}
+          />
+        </div>
+
+        <h4>{t.calculation.sectionAverages}</h4>
+        <div className="metric-grid">
+          <Metric
+            label={t.calculation.avgRevenuePerDrink}
+            tip={t.calculation.avgRevenuePerDrinkTip}
+            value={money(computed.averageRevenuePerDrink, lang, currency)}
+          />
+          <Metric
+            label={t.calculation.orderCostPerDrink}
+            tip={t.calculation.orderCostPerDrinkTip}
+            value={money(computed.averageOrderCostPerDrink, lang, currency)}
+          />
+        </div>
+
+        <h4>{t.calculation.sectionComparison}</h4>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th className="num">{t.calculation.comparisonAt100}</th>
+                <th className="num">
+                  {t.calculation.comparisonAtSoldShare} ({num(state.settings.soldPct, lang, 0)} %)
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonRows.map(([label, tip, at100, atSold]) => (
+                <tr key={label}>
+                  <td>
+                    <TipLabel label={label} tip={tip} />
+                  </td>
+                  <td className="num">{at100}</td>
+                  <td className="num">{atSold}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h4>{t.calculation.sectionLeftover}</h4>
+        <div className="metric-grid">
+          <Metric label={t.calculation.leftoverMl} tip={t.calculation.leftoverMlTip} value={`${num(computed.totalLeftoverMl / 1000, lang, 2)} l`} />
+          <Metric label={t.calculation.leftoverValue} tip={t.calculation.leftoverValueTip} value={money(computed.totalLeftoverValue, lang, currency)} />
+        </div>
+
+        <h4>{t.calculation.sectionBreakEven}</h4>
+        <div className="metric-grid">
+          <Metric
+            label={t.calculation.returnOnFoodCost}
+            tip={t.calculation.returnOnFoodCostTip}
+            value={`${num(computed.returnOnCostPct, lang, 1)} %`}
+          />
+          <Metric label={t.calculation.breakEvenNoCommission} tip={t.calculation.breakEvenNoCommissionTip} value={be(computed.beNoCommission)} />
+          <Metric label={t.calculation.breakEvenCommission} tip={t.calculation.breakEvenCommissionTip} value={be(computed.beCommission)} />
         </div>
       </article>
     </section>
