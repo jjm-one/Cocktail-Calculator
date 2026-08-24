@@ -5,6 +5,7 @@ import { useT } from '../i18n/useLang';
 import { useSortFilter, type ColumnSpec } from '../hooks/useSortFilter';
 import { SortableTh } from '../components/SortableTh';
 import { FilterRow } from '../components/FilterRow';
+import { Tooltip } from '../components/Tooltip';
 import type { LeftoverRow } from '../lib/types';
 
 export default function LeftoverPage() {
@@ -84,10 +85,7 @@ export default function LeftoverPage() {
         <div className="metric-grid">
           <div className="metric">
             <span>
-              {t.leftover.totalCommission}{' '}
-              <span className="tooltip" data-tip={t.leftover.totalCommissionTip}>
-                ?
-              </span>
+              {t.leftover.totalCommission} <Tooltip text={t.leftover.totalCommissionTip} />
             </span>
             <strong>
               {num(computed.totalLeftoverMlCommission / 1000, lang, 2)} l · {money(computed.totalLeftoverValueCommission, lang, currency)}
@@ -95,10 +93,7 @@ export default function LeftoverPage() {
           </div>
           <div className="metric">
             <span>
-              {t.leftover.totalNoCommission}{' '}
-              <span className="tooltip" data-tip={t.leftover.totalNoCommissionTip}>
-                ?
-              </span>
+              {t.leftover.totalNoCommission} <Tooltip text={t.leftover.totalNoCommissionTip} />
             </span>
             <strong>
               {num(computed.totalLeftoverMlNoCommission / 1000, lang, 2)} l · {money(computed.totalLeftoverValueNoCommission, lang, currency)}

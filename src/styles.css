@@ -575,13 +575,8 @@ input:focus, select:focus, textarea:focus {
   cursor: help;
   vertical-align: middle;
 }
-.tooltip:hover::after, .tooltip:focus::after {
-  content: attr(data-tip);
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 0.6rem);
-  transform: translateX(-50%);
-  width: min(300px, 78vw);
+.tooltip-bubble {
+  position: fixed;
   padding: 0.65rem 0.75rem;
   border-radius: 10px;
   background: #14181f;
@@ -591,8 +586,9 @@ input:focus, select:focus, textarea:focus {
   line-height: 1.4;
   box-shadow: var(--shadow);
   pointer-events: none;
-  z-index: 10;
+  z-index: 1000;
 }
+.tooltip-bubble-top { transform: translateY(-100%); }
 .prose-card p + p { margin-top: 0.7rem; }
 
 .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.7rem; }

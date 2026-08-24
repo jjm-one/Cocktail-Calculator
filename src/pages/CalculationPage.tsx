@@ -6,6 +6,7 @@ import { useT } from '../i18n/useLang';
 import { useSortFilter, type ColumnSpec } from '../hooks/useSortFilter';
 import { SortableTh } from '../components/SortableTh';
 import { FilterRow } from '../components/FilterRow';
+import { Tooltip } from '../components/Tooltip';
 import type { RecipeCalcOptions, RecipeCalcRow } from '../lib/types';
 
 const DEFAULT_CALC_OPTIONS: RecipeCalcOptions = {
@@ -19,11 +20,7 @@ function TipLabel({ label, tip }: { label: string; tip?: string }) {
   return (
     <>
       {label}{' '}
-      {tip && (
-        <span className="tooltip" data-tip={tip}>
-          ?
-        </span>
-      )}
+      {tip && <Tooltip text={tip} />}
     </>
   );
 }
@@ -133,19 +130,19 @@ export default function CalculationPage() {
         <div className="form-grid form-grid-inline">
           <label className="checkbox">
             <input type="checkbox" checked={calcOptions.includeStock} onChange={() => toggle('includeStock')} />{' '}
-            {t.calculation.optionStock} <span className="tooltip" data-tip={t.calculation.optionStockTip}>?</span>
+            {t.calculation.optionStock} <Tooltip text={t.calculation.optionStockTip} />
           </label>
           <label className="checkbox">
             <input type="checkbox" checked={calcOptions.includeLoss} onChange={() => toggle('includeLoss')} />{' '}
-            {t.calculation.optionLoss} <span className="tooltip" data-tip={t.calculation.optionLossTip}>?</span>
+            {t.calculation.optionLoss} <Tooltip text={t.calculation.optionLossTip} />
           </label>
           <label className="checkbox">
             <input type="checkbox" checked={calcOptions.includeBuffer} onChange={() => toggle('includeBuffer')} />{' '}
-            {t.calculation.optionBuffer} <span className="tooltip" data-tip={t.calculation.optionBufferTip}>?</span>
+            {t.calculation.optionBuffer} <Tooltip text={t.calculation.optionBufferTip} />
           </label>
           <label className="checkbox">
             <input type="checkbox" checked={calcOptions.includeCommission} onChange={() => toggle('includeCommission')} />{' '}
-            {t.calculation.optionCommission} <span className="tooltip" data-tip={t.calculation.optionCommissionTip}>?</span>
+            {t.calculation.optionCommission} <Tooltip text={t.calculation.optionCommissionTip} />
           </label>
         </div>
       </article>

@@ -3,6 +3,7 @@ import { toMl } from '../lib/calc';
 import { uid } from '../lib/format';
 import { useAppState } from '../state/AppStateContext';
 import { useT } from '../i18n/useLang';
+import { Tooltip } from './Tooltip';
 import type { Recipe, Unit } from '../lib/types';
 
 export interface RecipeDialogHandle {
@@ -105,9 +106,7 @@ export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog
           </label>
           <label className="checkbox">
             <input type="checkbox" checked={alcoholFree} onChange={(e) => setAlcoholFree(e.target.checked)} /> {t.recipes.alcoholFree}{' '}
-            <span className="tooltip" data-tip={t.recipes.alcoholFreeTip}>
-              ?
-            </span>
+            <Tooltip text={t.recipes.alcoholFreeTip} />
           </label>
         </div>
         <div className="section-head compact">

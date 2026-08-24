@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import type { SortState } from '../hooks/useSortFilter';
+import { Tooltip } from './Tooltip';
 
 export function SortableTh({
   label,
@@ -26,11 +27,7 @@ export function SortableTh({
           {dir === 'asc' ? '▲' : dir === 'desc' ? '▼' : '⇅'}
         </span>
       </button>
-      {tooltip && (
-        <span className="tooltip" data-tip={tooltip}>
-          ?
-        </span>
-      )}
+      {tooltip && <Tooltip text={tooltip} />}
     </th>
   );
 }

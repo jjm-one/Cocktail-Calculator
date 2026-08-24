@@ -3,6 +3,7 @@ import { toMl, unitsPerCase } from '../lib/calc';
 import { uid } from '../lib/format';
 import { useAppState } from '../state/AppStateContext';
 import { useT } from '../i18n/useLang';
+import { Tooltip } from './Tooltip';
 import type { PriceBasis, Purchase, Unit } from '../lib/types';
 
 export interface PurchaseDialogHandle {
@@ -132,7 +133,7 @@ export const PurchaseDialog = forwardRef<PurchaseDialogHandle>(function Purchase
             <input type="number" min="1" step="1" value={unitsPerCaseValue} onChange={(e) => setUnitsPerCaseValue(Number(e.target.value) || 1)} />
           </label>
           <label>
-            {t.dialog.stockUnits} <span className="tooltip" data-tip={t.dialog.stockUnitsTip}>?</span>
+            {t.dialog.stockUnits} <Tooltip text={t.dialog.stockUnitsTip} />
             <input type="number" min="0" step="0.5" value={stockUnits} onChange={(e) => setStockUnits(Number(e.target.value) || 0)} />
           </label>
           <label className="checkbox">
