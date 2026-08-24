@@ -15,6 +15,7 @@
   --radius: 12px;
   --header-bg: #16171a;
   --header-text: #f6f7f9;
+  --content-max: 2200px;
 
   /* Brand marque colors (logo only, not spread through the UI) */
   --brand-green: #21d6a4;
@@ -110,7 +111,7 @@ a.btn:hover { border-color: var(--accent); }
   align-items: center;
   gap: 1rem;
   padding: 0.7rem clamp(1rem, 4vw, 2.5rem);
-  max-width: 1280px;
+  max-width: var(--content-max);
   margin: 0 auto;
 }
 .brand {
@@ -220,7 +221,7 @@ a.btn:hover { border-color: var(--accent); }
 main {
   flex: 1;
   padding: 1.75rem clamp(1rem, 4vw, 2.5rem) 3rem;
-  max-width: 1280px;
+  max-width: var(--content-max);
   margin: 0 auto;
   width: 100%;
 }
@@ -243,7 +244,7 @@ main {
 .card h4 { margin: 1.3rem 0 0.6rem; font-size: 0.88rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .card h4:first-of-type { margin-top: 0.9rem; }
 .section-head p,
-.card p { color: var(--muted); margin: 0; line-height: 1.55; }
+.card p { color: var(--muted); margin: 0; line-height: 1.55; max-width: 72ch; }
 
 .eyebrow {
   margin: 0 0 0.35rem;
@@ -480,9 +481,9 @@ th.num .filter-input { text-align: right; }
 @media (max-width: 720px) { .scale-controls { grid-template-columns: 1fr; } }
 
 /* Forms */
-.form-grid { display: grid; gap: 0.9rem; }
-.form-grid.two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.form-grid.form-grid-inline { grid-template-columns: repeat(auto-fit, minmax(170px, auto)); }
+.form-grid { display: grid; gap: 0.9rem; max-width: 34rem; }
+.form-grid.two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
+.form-grid.form-grid-inline { grid-template-columns: repeat(auto-fit, minmax(170px, auto)); max-width: none; }
 .form-grid label { display: grid; gap: 0.35rem; color: #344054; font-size: 0.92rem; }
 .inline { display: flex; gap: 0.6rem; }
 .inline input { flex: 1; }
