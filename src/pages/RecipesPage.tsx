@@ -146,9 +146,12 @@ export default function RecipesPage() {
         {filteredRecipes.map((r) => (
           <article className="recipe-card" key={r.id}>
             <div className="recipe-meta">
-              <span className="pill">
-                {num(recipeBaseMl(r), lang, 1)} {t.recipes.mlBase}
-              </span>
+              <div className="recipe-meta-badges">
+                <span className="pill">
+                  {num(recipeBaseMl(r), lang, 1)} {t.recipes.mlBase}
+                </span>
+                {r.alcoholFree && <span className="pill pill-alcoholfree">{t.recipes.alcoholFree}</span>}
+              </div>
               <strong>{money(r.salePrice, lang, currency)}</strong>
             </div>
             <h3>{r.name}</h3>

@@ -158,7 +158,10 @@ export default function PlanningPage() {
                       aria-label={r.name}
                     />
                   </td>
-                  <td>{r.name}</td>
+                  <td>
+                    {r.name}
+                    {r.alcoholFree && <span className="tag-af">{t.recipes.alcoholFree}</span>}
+                  </td>
                   <td>
                     <select
                       disabled={!selected}

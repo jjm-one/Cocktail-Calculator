@@ -77,6 +77,20 @@ describe('normalizeState', () => {
     expect(state.purchases.find((p) => p.ingredient === 'Rum')?.stockUnits).toBe(3);
   });
 
+  it('defaults alcoholFree to false when absent and preserves it when present', () => {
+    const state = normalizeState(
+      {
+        recipes: [
+          { name: 'Regular', ingredients: [{ ingredient: 'Gin', ml: 50 }] },
+          { name: 'Virgin', ingredients: [{ ingredient: 'Gin', ml: 50 }], alcoholFree: true },
+        ],
+      },
+      defaults,
+    );
+    expect(state.recipes.find((r) => r.name === 'Regular')?.alcoholFree).toBe(false);
+    expect(state.recipes.find((r) => r.name === 'Virgin')?.alcoholFree).toBe(true);
+  });
+
   it('drops recipes without a name and ingredients without a positive quantity', () => {
     const state = normalizeState(
       {

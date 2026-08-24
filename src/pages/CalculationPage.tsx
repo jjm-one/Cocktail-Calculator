@@ -187,7 +187,10 @@ export default function CalculationPage() {
           <tbody>
             {visibleRows.map((row) => (
               <tr key={row.recipe.id}>
-                <td>{row.recipe.name}</td>
+                <td>
+                  {row.recipe.name}
+                  {row.recipe.alcoholFree && <span className="tag-af">{t.recipes.alcoholFree}</span>}
+                </td>
                 <td className="num">{num(row.servings, lang, 2)}</td>
                 <td className="num">{money(row.ek, lang, currency)}</td>
                 <td className="num">{money(row.ekAtSoldShare, lang, currency)}</td>

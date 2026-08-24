@@ -11,6 +11,8 @@
   --accent-soft: rgba(12, 127, 194, 0.1);
   --accent-on: #ffffff;
   --danger: #c0362f;
+  --success: #1f9d6f;
+  --success-soft: rgba(31, 157, 111, 0.13);
   --shadow: 0 10px 30px rgba(15, 23, 32, 0.07);
   --radius: 12px;
   --header-bg: #16171a;
@@ -460,6 +462,21 @@ th.num .filter-input { text-align: right; }
   color: var(--accent-strong);
   font-size: 0.76rem;
   font-weight: 700;
+}
+.pill-alcoholfree { background: var(--success-soft); color: var(--success); }
+.recipe-meta-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag-af {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+  padding: 0.08rem 0.42rem;
+  border-radius: 999px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 0.68rem;
+  font-weight: 700;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 .recipe-actions, .button-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
 .button-stack { display: grid; gap: 0.6rem; }

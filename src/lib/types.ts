@@ -34,6 +34,8 @@ export interface Recipe {
   preparation: string;
   salePrice: number;
   ingredients: RecipeIngredient[];
+  /** Marks the recipe as alcohol-free. Defaults to false/unset when absent. */
+  alcoholFree?: boolean;
 }
 
 export interface Plan {

@@ -13,6 +13,7 @@ const RECIPES_JSON_EXAMPLE = `{
       "description": "...",
       "preparation": "...",
       "salePrice": 8.5,
+      "alcoholFree": false,
       "ingredients": [
         { "ingredient": "Weißer Rum", "ml": 50 },
         { "ingredient": "Limettensaft", "ml": 25 }

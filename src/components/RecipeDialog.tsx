@@ -16,7 +16,7 @@ interface EditableIngredient {
   unit: Unit;
 }
 
-const emptyRecipe = (): Recipe => ({ id: '', name: '', description: '', preparation: '', salePrice: 0, ingredients: [] });
+const emptyRecipe = (): Recipe => ({ id: '', name: '', description: '', preparation: '', salePrice: 0, ingredients: [], alcoholFree: false });
 
 export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog(_props, ref) {
   const { t } = useT();
@@ -27,6 +27,7 @@ export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog
   const [salePrice, setSalePrice] = useState(0);
   const [description, setDescription] = useState('');
   const [preparation, setPreparation] = useState('');
+  const [alcoholFree, setAlcoholFree] = useState(false);
   const [ingredients, setIngredients] = useState<EditableIngredient[]>([]);
 
   useImperativeHandle(ref, () => ({
@@ -37,6 +38,7 @@ export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog
       setSalePrice(r.salePrice);
       setDescription(r.description);
       setPreparation(r.preparation);
+      setAlcoholFree(r.alcoholFree === true);
       setIngredients(r.ingredients.map((i) => ({ id: i.id, ingredient: i.ingredient, amount: i.ml, unit: 'ml' })));
       dialogRef.current?.showModal();
     },
@@ -66,6 +68,7 @@ export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog
       description: description.trim(),
       preparation: preparation.trim(),
       salePrice: Number(salePrice) || 0,
+      alcoholFree,
       ingredients: ingredients
         .map((i) => ({ id: i.id, ingredient: i.ingredient.trim(), ml: toMl(i.amount, i.unit) }))
         .filter((i) => i.ingredient && i.ml > 0),
@@ -99,6 +102,12 @@ export const RecipeDialog = forwardRef<RecipeDialogHandle>(function RecipeDialog
           <label>
             {t.dialog.preparation}
             <textarea rows={2} value={preparation} onChange={(e) => setPreparation(e.target.value)} />
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={alcoholFree} onChange={(e) => setAlcoholFree(e.target.checked)} /> {t.recipes.alcoholFree}{' '}
+            <span className="tooltip" data-tip={t.recipes.alcoholFreeTip}>
+              ?
+            </span>
           </label>
         </div>
         <div className="section-head compact">

@@ -39,6 +39,7 @@ async function loadDefaultRecipes(): Promise<Recipe[]> {
         ...recipe,
         id: uid(),
         salePrice: Number(recipe.salePrice) || 0,
+        alcoholFree: recipe.alcoholFree === true,
         ingredients: (recipe.ingredients || []).map((ingredient: { ingredient: string; ml: number }) => ({
           ...ingredient,
           id: uid(),
@@ -151,6 +152,7 @@ function sanitizeRecipe(raw: unknown): Recipe | null {
     description: typeof r.description === 'string' ? r.description : '',
     preparation: typeof r.preparation === 'string' ? r.preparation : '',
     salePrice: Number(r.salePrice) || 0,
+    alcoholFree: r.alcoholFree === true,
     ingredients,
   };
 }

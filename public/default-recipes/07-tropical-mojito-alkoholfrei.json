@@ -3,6 +3,7 @@
   "description": "Frisch, tropisch und näher an einem echten Mojito.",
   "preparation": "Minze leicht anschlagen, mit den übrigen Zutaten auf Eis geben und vorsichtig umrühren. Minze wird nicht kalkuliert.",
   "salePrice": 8.5,
+  "alcoholFree": true,
   "ingredients": [
     {
       "ingredient": "Gin alkoholfrei",
