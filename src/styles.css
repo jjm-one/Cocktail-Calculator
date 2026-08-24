@@ -336,6 +336,39 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .muted-row { opacity: 0.55; }
 .muted-row input, .muted-row select { cursor: not-allowed; }
 
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.th-sort:hover, .th-sort.is-active { color: var(--text); }
+.th-sort-icon { font-size: 0.7em; opacity: 0.55; }
+.th-sort.is-active .th-sort-icon { opacity: 1; }
+.filter-row th {
+  position: static;
+  top: auto;
+  padding: 0.35rem 0.5rem;
+  background: var(--surface);
+}
+.filter-input {
+  width: 100%;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8rem;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+th.num .filter-input { text-align: right; }
+
 /* Landing */
 .landing-hero {
   position: relative;

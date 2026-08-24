@@ -3,7 +3,10 @@ import { computeRecipeCalcRows } from '../lib/calc';
 import { money, num } from '../lib/format';
 import { useAppState } from '../state/AppStateContext';
 import { useT } from '../i18n/useLang';
-import type { RecipeCalcOptions } from '../lib/types';
+import { useSortFilter, type ColumnSpec } from '../hooks/useSortFilter';
+import { SortableTh } from '../components/SortableTh';
+import { FilterRow } from '../components/FilterRow';
+import type { RecipeCalcOptions, RecipeCalcRow } from '../lib/types';
 
 const DEFAULT_CALC_OPTIONS: RecipeCalcOptions = {
   includeStock: false,
@@ -20,6 +23,34 @@ export default function CalculationPage() {
   const [calcOptions, setCalcOptions] = useState<RecipeCalcOptions>(DEFAULT_CALC_OPTIONS);
   const rows = useMemo(() => computeRecipeCalcRows(state, calcOptions), [state, calcOptions]);
   const toggle = (key: keyof RecipeCalcOptions) => setCalcOptions((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  const columns: ColumnSpec<RecipeCalcRow>[] = useMemo(
+    () => [
+      { key: 'cocktail', sortValue: (r) => r.recipe.name, filterValue: (r) => r.recipe.name },
+      { key: 'servings', sortValue: (r) => r.servings, filterValue: (r) => num(r.servings, lang, 2) },
+      { key: 'ek', sortValue: (r) => r.ek, filterValue: (r) => money(r.ek, lang, currency) },
+      { key: 'sale', sortValue: (r) => r.sale, filterValue: (r) => money(r.sale, lang, currency) },
+      {
+        key: 'margin',
+        sortValue: (r) => r.margin,
+        filterValue: (r) => `${money(r.margin, lang, currency)} ${num(r.marginPct, lang, 1)}`,
+      },
+      { key: 'foodCost', sortValue: (r) => r.foodCostPct, filterValue: (r) => num(r.foodCostPct, lang, 1) },
+      { key: 'markup', sortValue: (r) => r.markupFactor, filterValue: (r) => num(r.markupFactor, lang, 2) },
+      {
+        key: 'contribution',
+        sortValue: (r) => r.totalContribution,
+        filterValue: (r) => money(r.totalContribution, lang, currency),
+      },
+      {
+        key: 'revenue',
+        sortValue: (r) => r.revenueWithYield,
+        filterValue: (r) => money(r.revenueWithYield, lang, currency),
+      },
+    ],
+    [lang, currency],
+  );
+  const { rows: visibleRows, sort, toggleSort, filters, setFilter } = useSortFilter(rows, columns);
 
   const overallRows: [string, string][] = [
     [t.calculation.grossOrderCost, money(computed.totalOrderGross, lang, currency)],
@@ -72,19 +103,34 @@ export default function CalculationPage() {
         <table>
           <thead>
             <tr>
-              <th>{t.calculation.thCocktail}</th>
-              <th className="num">{t.calculation.thServings}</th>
-              <th className="num">{t.calculation.thEkNoLoss}</th>
-              <th className="num">{t.calculation.thSale}</th>
-              <th className="num">{t.calculation.thMargin}</th>
-              <th className="num">{t.calculation.thFoodCost}</th>
-              <th className="num">{t.calculation.thMarkup}</th>
-              <th className="num">{t.calculation.thContribution}</th>
-              <th className="num">{t.calculation.thRevenue}</th>
+              <SortableTh label={t.calculation.thCocktail} sortKey="cocktail" sort={sort} onSort={toggleSort} />
+              <SortableTh label={t.calculation.thServings} sortKey="servings" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thEkNoLoss} sortKey="ek" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thSale} sortKey="sale" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thMargin} sortKey="margin" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thFoodCost} sortKey="foodCost" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thMarkup} sortKey="markup" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thContribution} sortKey="contribution" sort={sort} onSort={toggleSort} className="num" />
+              <SortableTh label={t.calculation.thRevenue} sortKey="revenue" sort={sort} onSort={toggleSort} className="num" />
             </tr>
+            <FilterRow
+              filters={filters}
+              onChange={setFilter}
+              cells={[
+                { key: 'cocktail', label: t.calculation.thCocktail },
+                { key: 'servings', label: t.calculation.thServings, className: 'num' },
+                { key: 'ek', label: t.calculation.thEkNoLoss, className: 'num' },
+                { key: 'sale', label: t.calculation.thSale, className: 'num' },
+                { key: 'margin', label: t.calculation.thMargin, className: 'num' },
+                { key: 'foodCost', label: t.calculation.thFoodCost, className: 'num' },
+                { key: 'markup', label: t.calculation.thMarkup, className: 'num' },
+                { key: 'contribution', label: t.calculation.thContribution, className: 'num' },
+                { key: 'revenue', label: t.calculation.thRevenue, className: 'num' },
+              ]}
+            />
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {visibleRows.map((row) => (
               <tr key={row.recipe.id}>
                 <td>{row.recipe.name}</td>
                 <td className="num">{num(row.servings, lang, 2)}</td>
