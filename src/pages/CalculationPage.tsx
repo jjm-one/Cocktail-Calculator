@@ -1,12 +1,25 @@
+import { useMemo, useState } from 'react';
+import { computeRecipeCalcRows } from '../lib/calc';
 import { money, num } from '../lib/format';
 import { useAppState } from '../state/AppStateContext';
 import { useT } from '../i18n/useLang';
+import type { RecipeCalcOptions } from '../lib/types';
+
+const DEFAULT_CALC_OPTIONS: RecipeCalcOptions = {
+  includeStock: false,
+  includeLoss: false,
+  includeBuffer: false,
+  includeCommission: false,
+};
 
 export default function CalculationPage() {
   const { lang, t } = useT();
   const { state, computed } = useAppState();
   const currency = state.settings.currency;
   const be = (v: number | null) => (v === null ? t.calculation.unreachable : `${num(v, lang, 1)} %`);
+  const [calcOptions, setCalcOptions] = useState<RecipeCalcOptions>(DEFAULT_CALC_OPTIONS);
+  const rows = useMemo(() => computeRecipeCalcRows(state, calcOptions), [state, calcOptions]);
+  const toggle = (key: keyof RecipeCalcOptions) => setCalcOptions((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const overallRows: [string, string][] = [
     [t.calculation.grossOrderCost, money(computed.totalOrderGross, lang, currency)],
@@ -33,14 +46,35 @@ export default function CalculationPage() {
         </div>
       </div>
 
-      <div className="table-wrap is-wide">
+      <article className="card">
+        <h3>{t.calculation.optionsTitle}</h3>
+        <div className="form-grid form-grid-inline">
+          <label className="checkbox">
+            <input type="checkbox" checked={calcOptions.includeStock} onChange={() => toggle('includeStock')} />{' '}
+            {t.calculation.optionStock} <span className="tooltip" data-tip={t.calculation.optionStockTip}>?</span>
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={calcOptions.includeLoss} onChange={() => toggle('includeLoss')} />{' '}
+            {t.calculation.optionLoss} <span className="tooltip" data-tip={t.calculation.optionLossTip}>?</span>
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={calcOptions.includeBuffer} onChange={() => toggle('includeBuffer')} />{' '}
+            {t.calculation.optionBuffer} <span className="tooltip" data-tip={t.calculation.optionBufferTip}>?</span>
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={calcOptions.includeCommission} onChange={() => toggle('includeCommission')} />{' '}
+            {t.calculation.optionCommission} <span className="tooltip" data-tip={t.calculation.optionCommissionTip}>?</span>
+          </label>
+        </div>
+      </article>
+
+      <div className="table-wrap is-wide top-gap">
         <table>
           <thead>
             <tr>
               <th>{t.calculation.thCocktail}</th>
               <th className="num">{t.calculation.thServings}</th>
               <th className="num">{t.calculation.thEkNoLoss}</th>
-              <th className="num">{t.calculation.thEkWithLoss}</th>
               <th className="num">{t.calculation.thSale}</th>
               <th className="num">{t.calculation.thMargin}</th>
               <th className="num">{t.calculation.thFoodCost}</th>
@@ -50,15 +84,14 @@ export default function CalculationPage() {
             </tr>
           </thead>
           <tbody>
-            {computed.recipeRows.map((row) => (
+            {rows.map((row) => (
               <tr key={row.recipe.id}>
                 <td>{row.recipe.name}</td>
                 <td className="num">{num(row.servings, lang, 2)}</td>
-                <td className="num">{money(row.ekNoLoss, lang, currency)}</td>
-                <td className="num">{money(row.ekWithLoss, lang, currency)}</td>
+                <td className="num">{money(row.ek, lang, currency)}</td>
                 <td className="num">{money(row.sale, lang, currency)}</td>
                 <td className="num">
-                  {money(row.marginWithLoss, lang, currency)} ({num(row.marginPct, lang, 1)} %)
+                  {money(row.margin, lang, currency)} ({num(row.marginPct, lang, 1)} %)
                 </td>
                 <td className="num">{num(row.foodCostPct, lang, 1)} %</td>
                 <td className="num">{num(row.markupFactor, lang, 2)}×</td>

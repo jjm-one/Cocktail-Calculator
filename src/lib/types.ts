@@ -98,6 +98,26 @@ export interface OrderRow {
   missing: boolean;
 }
 
+export interface RecipeCalcOptions {
+  includeStock: boolean;
+  includeLoss: boolean;
+  includeBuffer: boolean;
+  includeCommission: boolean;
+}
+
+export interface RecipeCalcRow {
+  recipe: Recipe;
+  servings: number;
+  ek: number;
+  sale: number;
+  margin: number;
+  marginPct: number;
+  foodCostPct: number;
+  markupFactor: number;
+  totalContribution: number;
+  revenueWithYield: number;
+}
+
 export interface ComputeResult {
   recipeRows: RecipeRow[];
   orderRows: OrderRow[];

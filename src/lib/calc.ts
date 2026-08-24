@@ -1,4 +1,16 @@
-import type { AppState, ComputeResult, OrderRow, Plan, Purchase, Recipe, RecipeRow, Unit } from './types';
+import type {
+  AppState,
+  ComputeResult,
+  OrderRow,
+  Plan,
+  Purchase,
+  Recipe,
+  RecipeCalcOptions,
+  RecipeCalcRow,
+  RecipeRow,
+  Settings,
+  Unit,
+} from './types';
 
 export function toMl(value: number | string, unit: Unit = 'ml'): number {
   const v = Number(value) || 0;
@@ -210,4 +222,78 @@ export function compute(state: AppState): ComputeResult {
     returnOnCostPct: totalOrderGross ? (profit / totalOrderGross) * 100 : 0,
     taxAmount: totalOrderGross - totalOrderNet,
   };
+}
+
+function effectiveUnitCost(
+  p: Purchase | null,
+  requiredMlGross: number,
+  settings: Settings,
+  opts: RecipeCalcOptions,
+): number {
+  if (!p) return 0;
+  const packageMl = Number(p.packageMl) || 1;
+  const baseUnitCost = grossPrice(p) / packageMl;
+  if (requiredMlGross <= 0) return baseUnitCost;
+  const stockMl = opts.includeStock ? Math.max(0, Number(p.stockUnits) || 0) * packageMl : 0;
+  const netRequiredMl = Math.max(0, requiredMlGross - stockMl);
+  if (p.commission && opts.includeCommission) {
+    const bottles = Math.ceil(netRequiredMl / packageMl);
+    const perCase = unitsPerCase(p);
+    const chargedBottles = settings.commissionMode === 'case' ? Math.ceil(bottles / perCase) * perCase : bottles;
+    return (chargedBottles * grossPrice(p)) / requiredMlGross;
+  }
+  return (netRequiredMl * baseUnitCost) / requiredMlGross;
+}
+
+/**
+ * Per-drink cost table used by the calculation page. Unlike `compute`, the loss, buffer,
+ * stock and commission effects are each toggled independently via `opts` instead of always
+ * being applied together. Stock and commission-case rounding are netted per ingredient across
+ * all selected recipes (mirroring the order logic), then spread back as a blended per-ml rate
+ * so every recipe using that ingredient sees the same effective price.
+ */
+export function computeRecipeCalcRows(state: AppState, opts: RecipeCalcOptions): RecipeCalcRow[] {
+  const { settings, recipes, purchases, plans } = state;
+  const lossFactor = opts.includeLoss ? 1 + (Number(settings.consumptionLossPct) || 0) / 100 : 1;
+  const bufferFactor = opts.includeBuffer ? 1 + (Number(settings.bufferPct) || 0) / 100 : 1;
+  const yieldFactor = 1 - (Number(settings.yieldLossPct) || 0) / 100;
+
+  const planned: { recipe: Recipe; servings: number; items: { ingredient: string; qtyPerDrink: number }[] }[] = [];
+  const requiredMl: Record<string, number> = {};
+
+  for (const r of recipes) {
+    const plan = plans[r.id] || DEFAULT_PLAN;
+    if (plan.selected === false) continue;
+    const servings = planToServings(settings.defaultServingMl, plan);
+    const scale = ingredientFactor(settings.defaultServingMl, r);
+    const items = r.ingredients.map((ing) => ({ ingredient: ing.ingredient, qtyPerDrink: (Number(ing.ml) || 0) * scale }));
+    for (const it of items) {
+      requiredMl[it.ingredient] = (requiredMl[it.ingredient] || 0) + it.qtyPerDrink * servings * lossFactor * bufferFactor;
+    }
+    planned.push({ recipe: r, servings, items });
+  }
+
+  const rate: Record<string, number> = {};
+  for (const ingredient of Object.keys(requiredMl)) {
+    const p = activePurchaseFor(purchases, ingredient);
+    rate[ingredient] = effectiveUnitCost(p, requiredMl[ingredient], settings, opts);
+  }
+
+  return planned.map(({ recipe, servings, items }) => {
+    const ek = items.reduce((s, it) => s + it.qtyPerDrink * lossFactor * bufferFactor * (rate[it.ingredient] || 0), 0);
+    const sale = Number(recipe.salePrice) || 0;
+    const margin = sale - ek;
+    return {
+      recipe,
+      servings,
+      ek,
+      sale,
+      margin,
+      marginPct: sale ? (margin / sale) * 100 : 0,
+      foodCostPct: sale ? (ek / sale) * 100 : 0,
+      markupFactor: ek ? sale / ek : 0,
+      totalContribution: margin * servings * yieldFactor,
+      revenueWithYield: servings * sale * yieldFactor,
+    };
+  });
 }

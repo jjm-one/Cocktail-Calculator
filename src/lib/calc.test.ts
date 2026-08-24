@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { compute, fromMl, grossPrice, netPrice, planToServings, recipeBaseMl, toMl } from './calc';
-import type { AppState, Plan, Purchase, Recipe, Settings } from './types';
+import { compute, computeRecipeCalcRows, fromMl, grossPrice, netPrice, planToServings, recipeBaseMl, toMl } from './calc';
+import type { AppState, Plan, Purchase, Recipe, RecipeCalcOptions, Settings } from './types';
+
+const NO_OPTIONS: RecipeCalcOptions = {
+  includeStock: false,
+  includeLoss: false,
+  includeBuffer: false,
+  includeCommission: false,
+};
 
 function makeSettings(overrides: Partial<Settings> = {}): Settings {
   return {
@@ -220,6 +227,70 @@ describe('compute', () => {
   it('avoids division-by-zero metrics for a free (zero sale price) recipe', () => {
     const state = makeState({ recipes: [makeRecipe({ salePrice: 0 })] });
     const row = compute(state).recipeRows[0];
+    expect(row.foodCostPct).toBe(0);
+    expect(row.markupFactor).toBe(0);
+    expect(row.marginPct).toBe(0);
+  });
+});
+
+describe('computeRecipeCalcRows', () => {
+  it('defaults to the plain per-ml purchase price with no toggles active', () => {
+    // 100ml/drink * 10 €/l = 1.00 €, unaffected by loss/buffer/stock/commission.
+    const state = makeState();
+    const [row] = computeRecipeCalcRows(state, NO_OPTIONS);
+    expect(row.ek).toBeCloseTo(1, 5);
+  });
+
+  it('applies loss and buffer as independent multipliers', () => {
+    const state = makeState({ settings: makeSettings({ consumptionLossPct: 10, bufferPct: 20 }) });
+    const lossOnly = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeLoss: true })[0];
+    expect(lossOnly.ek).toBeCloseTo(1.1, 5);
+    const bufferOnly = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeBuffer: true })[0];
+    expect(bufferOnly.ek).toBeCloseTo(1.2, 5);
+    const both = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeLoss: true, includeBuffer: true })[0];
+    expect(both.ek).toBeCloseTo(1.1 * 1.2, 5);
+  });
+
+  it('nets existing stock against the blended cost, spread across recipes sharing the ingredient', () => {
+    // Two recipes each need 1000ml total (100ml * 10 drinks); 1 bottle (1000ml) is in stock,
+    // covering half of the combined 2000ml need, so the effective rate halves for both.
+    const state = makeState({
+      purchases: [makePurchase({ price: 10, packageMl: 1000, stockUnits: 1 })],
+      recipes: [
+        makeRecipe({ id: 'r1', name: 'A', ingredients: [{ id: 'i1', ingredient: 'Vodka', ml: 100 }] }),
+        makeRecipe({ id: 'r2', name: 'B', ingredients: [{ id: 'i2', ingredient: 'Vodka', ml: 100 }] }),
+      ],
+      plans: {
+        r1: { mode: 'pieces', value: 10, unit: 'ml', selected: true },
+        r2: { mode: 'pieces', value: 10, unit: 'ml', selected: true },
+      },
+    });
+    const withoutStock = computeRecipeCalcRows(state, NO_OPTIONS);
+    expect(withoutStock[0].ek).toBeCloseTo(1, 5);
+    expect(withoutStock[1].ek).toBeCloseTo(1, 5);
+    const withStock = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeStock: true });
+    expect(withStock[0].ek).toBeCloseTo(0.5, 5);
+    expect(withStock[1].ek).toBeCloseTo(0.5, 5);
+  });
+
+  it('only prices commission goods via the case/bottle rounding model when the toggle is on', () => {
+    // defaultServingMl matches the recipe's total ml, so the recipe scale factor is 1:1.
+    // 250ml needed -> 1 bottle (1000ml), rounded up to a full case of 6 -> 6 bottles charged.
+    const state = makeState({
+      settings: makeSettings({ defaultServingMl: 250, commissionMode: 'case' }),
+      purchases: [makePurchase({ price: 10, packageMl: 1000, unitsPerCase: 6, commission: true })],
+      recipes: [makeRecipe({ ingredients: [{ id: 'i1', ingredient: 'Vodka', ml: 250 }] })],
+      plans: { r1: { mode: 'pieces', value: 1, unit: 'ml', selected: true } },
+    });
+    const commissionOff = computeRecipeCalcRows(state, NO_OPTIONS)[0];
+    expect(commissionOff.ek).toBeCloseTo(2.5, 5); // plain per-ml price, commission ignored
+    const commissionOn = computeRecipeCalcRows(state, { ...NO_OPTIONS, includeCommission: true })[0];
+    expect(commissionOn.ek).toBeCloseTo(60, 5); // 6 charged bottles * 10 € spread over 250ml
+  });
+
+  it('avoids division-by-zero metrics for a free (zero sale price) recipe', () => {
+    const state = makeState({ recipes: [makeRecipe({ salePrice: 0 })] });
+    const row = computeRecipeCalcRows(state, NO_OPTIONS)[0];
     expect(row.foodCostPct).toBe(0);
     expect(row.markupFactor).toBe(0);
     expect(row.marginPct).toBe(0);
